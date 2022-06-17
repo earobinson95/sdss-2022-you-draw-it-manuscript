@@ -34,6 +34,8 @@ header-includes:
    - \newcommand\pcref[1]{(\cref{#1})}
 ---
 
+<!-- https://authorservices.wiley.com/author-resources/book-authors/prepare-your-manuscript/wiley-latex-template.html -->
+
 # Introduction
 
 Our visual system is naturally built to look for structure and identify patterns. For instance, points going down from left to right indicates a negative correlation between the $x$ and $y$ variables. How can we compare our intuitive visual sense of patterns to those determined by statistical methods?
