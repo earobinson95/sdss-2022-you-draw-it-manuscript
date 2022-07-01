@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.28)  29 JUN 2022 11:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.28)  1 JUL 2022 10:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -240,64 +240,62 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 38.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 52.
+
+Underfull \hbox (badness 10000) in paragraph at lines 119--119
+[][]\OT1/ptm/m/n/9 Visit $\OT1/pcr/m/n/9 emily-[]robinson . shinyapps . io /
+ []
+
 <images/ydi-stimuli.png, id=1, 713.94pt x 196.662pt>
 File: images/ydi-stimuli.png Graphic file (type png)
 <use images/ydi-stimuli.png>
-Package pdftex.def Info: images/ydi-stimuli.png  used on input line 122.
+Package pdftex.def Info: images/ydi-stimuli.png  used on input line 123.
 (pdftex.def)             Requested size: 243.91125pt x 67.18527pt.
 [1{c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
 
 ]
-<images/code-sketch-2.png, id=14, 1040.88875pt x 411.5375pt>
+<images/code-sketch-2.png, id=15, 1040.88875pt x 411.5375pt>
 File: images/code-sketch-2.png Graphic file (type png)
 <use images/code-sketch-2.png>
-Package pdftex.def Info: images/code-sketch-2.png  used on input line 168.
+Package pdftex.def Info: images/code-sketch-2.png  used on input line 169.
 (pdftex.def)             Requested size: 243.91125pt x 96.43503pt.
 
-Underfull \hbox (badness 2644) in paragraph at lines 174--180
-[]\OT1/cmr/m/n/10 Parameters for aes-thetic de-sign choices are de-
+Underfull \hbox (badness 10000) in paragraph at lines 180--180
+[][]\OT1/ptm/m/n/9 For \OT1/pcr/m/n/9 D3.js \OT1/ptm/m/n/9 source code, visit $\OT1/pcr/m/n/9 https : / / github .
  []
 
 
-Underfull \hbox (badness 1668) in paragraph at lines 174--180
-\OT1/pcr/m/n/10 D3.js \OT1/cmr/m/n/10 source code, visit $\OT1/pcr/m/n/10 https : / / github . com /
+Underfull \hbox (badness 10000) in paragraph at lines 180--180
+\OT1/pcr/m/n/9 com / earobinson95 / presentations / blob / master /
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 174--180
-\OT1/pcr/m/n/10 earobinson95 / presentations / blob / master /
- []
-
-
-Underfull \vbox (badness 3547) has occurred while \output is active []
-
-<images/pca-plot.jpg, id=15, 505.89pt x 284.262pt>
+<images/pca-plot.jpg, id=16, 505.89pt x 284.262pt>
 File: images/pca-plot.jpg Graphic file (type jpg)
 <use images/pca-plot.jpg>
-Package pdftex.def Info: images/pca-plot.jpg  used on input line 220.
+Package pdftex.def Info: images/pca-plot.jpg  used on input line 221.
 (pdftex.def)             Requested size: 243.91125pt x 137.05579pt.
-[2 <./images/ydi-stimuli.png> <./images/code-sketch-2.png>]
-<images/eyefitting-trial-plot.png, id=24, 505.89pt x 505.89pt>
+<images/eyefitting-trial-plot.png, id=17, 505.89pt x 505.89pt>
 File: images/eyefitting-trial-plot.png Graphic file (type png)
 <use images/eyefitting-trial-plot.png>
-Package pdftex.def Info: images/eyefitting-trial-plot.png  used on input line 244.
+Package pdftex.def Info: images/eyefitting-trial-plot.png  used on input line 231.
 (pdftex.def)             Requested size: 243.91125pt x 243.91284pt.
+[2 <./images/ydi-stimuli.png> <./images/code-sketch-2.png>]
 <images/eyefitting-lmer-plot.png, id=25, 548.0475pt x 389.0535pt>
 File: images/eyefitting-lmer-plot.png Graphic file (type png)
 <use images/eyefitting-lmer-plot.png>
-Package pdftex.def Info: images/eyefitting-lmer-plot.png  used on input line 252.
+Package pdftex.def Info: images/eyefitting-lmer-plot.png  used on input line 256.
 (pdftex.def)             Requested size: 243.91125pt x 173.14903pt.
 <images/eyefitting-gamm-plot.png, id=26, 548.0475pt x 389.0535pt>
 File: images/eyefitting-gamm-plot.png Graphic file (type png)
 <use images/eyefitting-gamm-plot.png>
-Package pdftex.def Info: images/eyefitting-gamm-plot.png  used on input line 260.
+Package pdftex.def Info: images/eyefitting-gamm-plot.png  used on input line 264.
 (pdftex.def)             Requested size: 243.91125pt x 173.14903pt.
-<images/exponential-yloess-spaghetti-plot-2-1.png, id=27, 578.16pt x 578.16pt>
+[3 <./images/pca-plot.jpg> <./images/eyefitting-trial-plot.png> <./images/eyefitting-lmer-plot.png (PNG copy)> <./images/eyefitting-gamm-plot.png (PNG copy)>]
+<images/exponential-yloess-spaghetti-plot-2-1.png, id=31, 578.16pt x 578.16pt>
 File: images/exponential-yloess-spaghetti-plot-2-1.png Graphic file (type png)
 <use images/exponential-yloess-spaghetti-plot-2-1.png>
-Package pdftex.def Info: images/exponential-yloess-spaghetti-plot-2-1.png  used on input line 268.
+Package pdftex.def Info: images/exponential-yloess-spaghetti-plot-2-1.png  used on input line 281.
 (pdftex.def)             Requested size: 243.91125pt x 243.91064pt.
 (./2022-sdss-you-draw-it-manuscript.bbl
 Underfull \hbox (badness 1442) in paragraph at lines 18--25
@@ -309,17 +307,17 @@ Underfull \hbox (badness 1348) in paragraph at lines 18--25
 \OT1/cmr/m/it/10 Math-e-mat-i-cal, Phys-i-cal and En-gi-neer-ing Sci-ences\OT1/cmr/m/n/10 ,
  []
 
-) [3 <./images/pca-plot.jpg> <./images/eyefitting-trial-plot.png>] [4 <./images/eyefitting-lmer-plot.png (PNG copy)> <./images/eyefitting-gamm-plot.png (PNG copy)> <./images/exponential-yloess-spaghetti-plot-2-1.png (PNG copy)>] (./2022-sdss-you-draw-it-manuscript.aux) ) 
+) [4 <./images/exponential-yloess-spaghetti-plot-2-1.png (PNG copy)>] (./2022-sdss-you-draw-it-manuscript.aux) ) 
 Here is how much of TeX's memory you used:
- 4891 strings out of 479997
- 91153 string characters out of 5886778
+ 4906 strings out of 479997
+ 91293 string characters out of 5886778
  426233 words of memory out of 5000000
- 22996 multiletter control sequences out of 15000+600000
- 488395 words of font info for 82 fonts, out of 8000000 for 9000
+ 23004 multiletter control sequences out of 15000+600000
+ 493995 words of font info for 93 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  55i,11n,62p,504b,292s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}<c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb><c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb><c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/Users/ERobi/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on 2022-sdss-you-draw-it-manuscript.pdf (4 pages, 4090117 bytes).
+Output written on 2022-sdss-you-draw-it-manuscript.pdf (4 pages, 4091047 bytes).
 PDF statistics:
  79 PDF objects out of 1000 (max. 8388607)
  42 compressed objects within 1 object stream

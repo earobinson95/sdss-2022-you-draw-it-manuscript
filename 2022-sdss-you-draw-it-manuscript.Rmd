@@ -58,7 +58,7 @@ The goal of this research is to implement ‘You Draw It’, adapted from the Ne
 
 \subsection{`You Draw It' Task}
 
-When completing the graphical task, users are shown an interactive scatter-plot (Figure 1) along with the prompt, "Use your mouse to fill in the trend in the yellow box region." The yellow box region moves along as the user draws their trend-line, providing a visual cue which indicates where the user still needs to complete a trend line. After the entire domain has been visually estimated or predicted, the yellow region disappears, indicating the participant has completed the task. Prior to study participation, example gifs are shown and users are asked to complete practice plots to ease the learning curve of the task. Visit \url{emily-robinson.shinyapps.io/can-you-draw-it} for a test applet.
+When completing the graphical task, users are shown an interactive scatter-plot (Figure 1) along with the prompt, "Use your mouse to fill in the trend in the yellow box region." The yellow box region moves along as the user draws their trend-line, providing a visual cue which indicates where the user still needs to complete a trend line. After the entire domain has been visually estimated or predicted, the yellow region disappears, indicating the participant has completed the task. Prior to study participation, example gifs are shown and users are asked to complete practice plots to ease the learning curve of the task. ^[Visit \url{emily-robinson.shinyapps.io/can-you-draw-it} for a test applet.]
 
 <!-- # ```{r, you-draw-it-example, echo = F, out.width = "100%", fig.align='center', fig.cap = "'You Draw It' interaction task plot as shown to user. \\textbf{Left:} illustrates what user first sees with the prompt \\textit{`Use your mouse to fill in the trend in the yellow box region.'} \\textbf{Middle:} illustrates what the user sees while completing the task. \\textbf{Right:} illustrates the users finished trend line."} -->
 <!-- # knitr::include_graphics("images/ydi-stimuli.png") -->
@@ -91,7 +91,8 @@ Figure 2 illustrates the initial setup of the visual stimuli along with the iter
 \end{center}
 \end{figure}
 
-Parameters for aesthetic design choices are defined in a list of options and `r2d3` passes these to the D3.js code. For instance, we can specify the buffer space allowed for the $x$ and $y$ axes to avoid users to anchor their lines to the axes limits. For `D3.js` source code, visit \url{https://github.com/earobinson95/presentations/blob/master/can-you-draw-it/www/main-d3v5.js}.
+Parameters for aesthetic design choices are defined in a list of options and `r2d3` passes these to the D3.js code. For instance, we can specify the buffer space allowed for the $x$ and $y$ axes to avoid users to anchor their lines to the axes limits. ^[For `D3.js` source code, visit \url{https://github.com/earobinson95/presentations/blob/master/can-you-draw-it/www/main-d3v5.js}.]
+
 
 \subsection{Challenges}
 
@@ -107,7 +108,7 @@ One constraint of the development code to date is that it is only built to work 
 
 \subsection{Tool Validation}
 
-We conducted a study in order to validate 'You Draw It' as a method for graphical testing, comparing results to the less technological method utilized in Mosteller et al. \shortcite{mosteller1981eye}. Results from our study were consistent with those found in the previous study; when shown points following a linear trend, participants tended to fit the slope of the first principal component over the slope of the ordinary least-squares regression line (Figure 3). This trend was most prominent when shown data simulated with larger variances. This study reinforces the differences between intuitive visual model fitting and statistical model fitting, providing information about human perception as it relates to the use of statistical graphics.
+We conducted a study in order to validate 'You Draw It' as a method for graphical testing, comparing results to the less technological method utilized in Mosteller et al. \shortcite{mosteller1981eye}. Results from our study were consistent with those found in the previous study; when shown points following a linear trend, participants tended to fit the slope of the first principal component over the slope of the ordinary least-squares regression line (Figure 3). This trend was most prominent when shown data simulated with larger variances. This study reinforced the differences between intuitive visual model fitting and statistical model fitting, providing information about human perception as it relates to the use of statistical graphics.
 
 \begin{figure}[ht]
 \begin{center}
@@ -119,20 +120,20 @@ We conducted a study in order to validate 'You Draw It' as a method for graphica
 
 \subsection{Data Analysis}
 
-Feedback data from conducted studies are collected and stored in a database for analysis (Figure 4). Within the collected feedback data, we know the simulated data points, the predicted values from the statistical model, and the predicted values from the user drawn line. In our initial studies, a unique data set was simulated independently for each participant. Therefore, we evaluate the accuracy of the user drawn line by observing the deviation, vertical residuals, between the user drawn line and the predicted values from the statistical model. We use a Generalized Additive Mixed Model (GAMM) to model the vertical residuals in order to statistically compare visually fitted trends to actual metrics, simulated data models, or statistical regression results. A benefit of using a GAMM is the estimation of smoothing splines, allowing for flexibility in the residual trend.
-
 \begin{figure}[ht]
 \begin{center}
 \centerline{\includegraphics[width=\columnwidth]{images/eyefitting-trial-plot}}
-\caption{Example of three trend lines showing the the OLS fitted, PCA fitted, and participant drawn values overlaid on the simulated data points}
+\caption{Example of validation feedback data where three trend lines show the the OLS fitted, PCA fitted, and participant drawn values overlaid on the simulated data points}
 \label{eyefitting-trial-plot}
 \end{center}
 \end{figure}
 
+Feedback data from conducted studies were collected and stored in a database for analysis (Figure 4). Within the collected feedback data, we knew the simulated data points, the predicted values from the statistical model, and the predicted values from the user drawn line. In our initial studies, a unique data set was simulated independently for each participant. Therefore, we evaluate the accuracy of the user drawn line by observing the deviation, vertical residuals, between the user drawn line and the predicted values from the statistical model. Due to participant variation, we use mixed models to evaluate the vertical residuals in order to statistically compare visually fitted trends to actual metrics, simulated data models, or statistical regression results. In our validation study, we first analyzed the residual trend using a linear mixed model (LMM), thus constraining the fit to a linear trend (Figure 5). In addition, we fit a Generalized Additive Mixed Model (GAMM) to allow for flexibility in the residual trend and to generalized the method to nonlinear models (Figure 6).
+
 \begin{figure}[ht]
 \begin{center}
 \centerline{\includegraphics[width=\columnwidth]{images/eyefitting-lmer-plot}}
-\caption{Estimated trends of residuals (vertical deviation of participant drawn points from both the OLS (blue) and PCA (orange) fitted points) as fit by a linear mixed model.}
+\caption{Validation study estimated trends of residuals (vertical deviation of participant drawn points from both the OLS (blue) and PCA (orange) fitted points) as fit by a linear mixed model.}
 \label{eyefitting-lmer-plot}
 \end{center}
 \end{figure}
@@ -140,10 +141,12 @@ Feedback data from conducted studies are collected and stored in a database for 
 \begin{figure}[ht]
 \begin{center}
 \centerline{\includegraphics[width=\columnwidth]{images/eyefitting-gamm-plot}}
-\caption{Estimated trends of residuals (vertical deviation of participant drawn points from both the OLS (blue) and PCA (orange) fitted points) as fit by a generalized additive mixed model.}
+\caption{Validation study estimated trends of residuals (vertical deviation of participant drawn points from both the OLS (blue) and PCA (orange) fitted points) as fit by a generalized additive mixed model.}
 \label{eyefitting-gamm-plot}
 \end{center}
 \end{figure}
+
+After validating the 'You Draw It' method, we conducted a study utilizing the new method to evaluate participants ability to make forecasts for exponentially increasing data on log and linear scales. Along with analyzing the feedback data with the GAMM method for flexibility due to nonlinear data, we used spaghetti plots to visualize participants forecasts compared to the nonlinear least squares statistical model and make comparisons between two chart design features (Figure 6).
 
 \begin{figure}[ht]
 \begin{center}
@@ -155,4 +158,4 @@ Feedback data from conducted studies are collected and stored in a database for 
 
 \section{Future Work}
 
-In this work, we implemented and validated ‘You Draw It’ as a way to measure the patterns we see in data. We demonstrated the use of generalized additive models to statistically model participant data. While technical details of the development process are presented here, we intend to create an R package designed for easy implementation of 'You Draw It' task plots in order to make this tool accessible to other researchers. Further investigation is necessary to implement this method real data in order to facilitate scientific communication.
+In this work, we implemented and validated ‘You Draw It’ as a new method to measure the patterns we see in data. We demonstrated the use of generalized additive models to statistically model participant feedback data and generalized the analysis method to nonlinear trends. While technical details of the development process are presented here, we intend to create an R package designed for easy implementation of 'You Draw It' task plots in order to make this tool accessible to other researchers. Further investigation is necessary to implement this method with real data in order to facilitate scientific communication.
