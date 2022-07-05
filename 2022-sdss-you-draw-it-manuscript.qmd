@@ -1,0 +1,211 @@
+---
+title: "'You Draw It': Implementation of visually fitted trends with `r2d3`"
+bibliography: references.bib
+abstract: "How do statistical regression results compare to intuitive, visually fitted results? Fitting lines by eye through a set of points has been explored since the 20th century. Common methods of fitting trends by eye involve maneuvering a string, black thread, or ruler until the fit is suitable, then drawing the line through the set of points. In 2015, the New York Times introduced an interactive feature, called 'You Draw It,' where readers are asked to input their own assumptions about various metrics and compare how these assumptions relate to reality. This research is intended to implement 'You Draw It', adapted from the New York Times, as a way to measure the patterns we see in data."
+
+keywords: 'graphics, user interaction, regression'
+format: 
+  pdf:
+    include-in-header:
+      - edits.tex
+      - refs.tex
+    keep-tex: true
+    # template: template-blinded.tex
+    # template: template.tex
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = F, 
+                      eval = T, 
+                      fig.path="./images/", 
+                      fig.env="figure*", 
+                      fig.align = "center")
+library(readr)
+library(tidyverse)
+library(knitr)
+library(bibtex)
+theme_set(theme_bw())
+
+library(readxl)
+library(lubridate)
+```
+
+# Introduction
+
+We all use statistical graphics, but how do we know that the graphics we use are communicating \svp{effectively}?
+Through experimentation, graphical testing methods allow researchers to conduct studies \svp{designed to understand how we perceive graphics and perform graphical tasks} such as differentiation, prediction, estimation, and extrapolation. 
+\svp{Each of these levels of interaction with a graph require a different method of engagement with and use of the information presented in a chart.}
+<!-- All of these types of tests require different levels of use and manipulation of the information being presented in the chart. -->
+<!-- Efforts in the field of statistical graphics have developed graphical testing tools and methods, such as the lineup protocol @buja2009statistical.  -->
+<!-- The advancement of graphing software provides the tools necessary to develop new methods of testing statistical graphics. -->
+\svp{In this paper, we describe the adaptation of an old tool for graphical testing and evaluation, eye-fitting, for use in modern web-applications suitable for testing statistical graphics. 
+We present an empirical evaluation of this testing method for linear regression, and briefly discuss an extension of this method to non-linear applications.}
+
+\svp{One of the most common charts created is a scatter plot of points over time; these charts show up regularly in news articles and in scientific publications alike.
+These charts rely on our} ability to identify and detect trends in data. 
+Our visual system is naturally built to look for structure and identify patterns, \svp{including patterns and trends over time; many times we do not even notice this process happening subconsciously}. 
+\svp{As shown in @fig:gas-prices, a viewer engaging with a plot of weekly average gas prices over time may perform several cognitive operations. First, they scan the plot and assesses points to determine if there are any outliers or otherwise remarkable points. Then, they may fit a rough mental smooth/trend line to the points to summarize the useful information and remove variability. Finally, an interested and engaged viewer may pull in additional contextual information from long-term memory, seeking to explain variation in the mental 'trend' with supplemental information, such as COVID lock downs which reduced gasoline demand and the beginning of the war in Ukraine, which wreaked havoc on the supply and demand for global energy sources.}
+
+```{r gas-prices, echo = F, message = F, warning = F}
+#| fig-cap: "Weekly average gas prices in the United States, 2019-June 2022. Additional mental operations a viewer might perform while looking at the plot are annotated in grey. @usenergyinformationadministrationWeeklyAllGrades2022"
+#| out-width: \columnwidth
+#| label: gas-prices
+#| fig-res: 300
+#| fig-width: 8
+#| fig-height: 4
+#| fig-env: figure
+
+gas <- read_xls("EMM_EPM0_PTE_NUS_DPGw.xls", skip = 3, sheet = 2) %>%
+  set_names(c("Date", "Price"))
+
+annotations <- tibble(
+  xmin = as.POSIXct(ymd(c("2020-03-15", "2022-02-26"))),
+  xmax = as.POSIXct(ymd(c("2020-05-30", "2022-06-29"))),
+  ymin = -Inf,
+  ymax = Inf,
+  label = c("COVID lockdowns", "War in Ukraine")
+)
+ggplot(gas, aes(x = Date, y = Price)) + 
+  geom_rect(data = annotations, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax), alpha= 0.2, fill = "grey", inherit.aes = F) + 
+  geom_text(data = annotations, aes(x = xmin, y = 1, label = label), color = "grey") + 
+  ylab("Price per Gallon ($)") + 
+  ggtitle("Weekly Average Gas Prices in the United States, 2019 - 2022", subtitle = "US Energy Information Administration") + 
+  geom_point() + 
+  scale_x_datetime(limits = as.POSIXct(ymd("2019-01-01", "2022-06-29"))) + 
+  geom_line(se = F, color = "grey", method = "loess", span = .1, alpha = .5, stat = "smooth", size = 1.5)
+```
+
+Initial studies in the 20th century explored the use of fitting lines by eye through a set of points [@finney1951subjective,mosteller1981eye]. Common methods of fitting trends by eye involved maneuvering a string, black thread, or ruler until the fit was suitable, then drawing the line through the set of points. Recently, @ciccione2021can conducted a comprehensive set of studies investigating human ability to detect trends in graphical representations from a psychophysical approach.\svp{XXX and found what? Describe the results XXX}
+
+\svp{While psychologists and statisticians have been using eye-fitting techniques to assess our innate perceptual statistical modeling abilities, news organizations have used similar techniques in order to draw readers in and demonstrate the difference between readers' assumptions and reality.} In 2015, the New York Times introduced an interactive feature, called 'You Draw It' [@aisch2015you], where readers input their own assumptions about various \svp{metrics of news interest} and compare these assumptions to reality. The New York Times team used Data Driven Documents (D3), \svp{a JavaScript library} that allows readers to \svp{interact with a chart directly by} drawing a line on their computer screen with a mouse. \svp{Despite the somewhat different purpose behind this feature, the D3 driven method used by the NYT is wonderfully intuitive, and does not require the assumption of linearity, making it much more adaptable to testing how viewers perceive and predict when presented with non-linear data.}
+
+\svp{We set out to implement} ‘You Draw It’, adapted from the New York Times feature, as a way to experimentally assess the patterns we see in data. 
+Here, we provide technical details of the software development, utilizing interactive graphics in R[@r-software]. 
+We then share results from our study which validates 'You Draw It' as a method for graphical testing \svp{on linear trends} and apply an appropriate data analysis method to the participant data. \svp{We also briefly demonstrate the use of the 'You Draw It' method and analysis on nonlinear data.}
+
+# Development 
+
+
+## You Draw It v0
+
+\svp{Describe the NYT code - what it does, how it works (for loop to connect mouse coordinates to closest point via inverting the scales)}
+
+\svp{The New York Times uses D3, Data Driven Documents [@bostock2011d3], to create many of the interactive data graphics that users rely on, from the famous "election needle" in 2016 to their covid dashboards. Naturally, this same framework was used} to create the 'You Draw It' \svp{feature}. 
+<!-- Major news and research organizations such as the New York Times, FiveThirtyEight, Washington Post, and the pew Research Center use D3 to create and customize graphics.  -->
+
+A challenge of working with D3 is the environment necessary to display the graphics and images.
+\svp{XXX What environment, why is this a challenge, and how did you overcome it?}
+
+
+## Generating D3 Plots in R
+
+\svp{Describe the process of using `r2d3`}
+<!-- The `r2d3` package [@r2d3pkg] provides an efficient integration of D3 visuals into R HTML formats. We integrate the D3 visual source code into an R Shiny [@shinypkg] application in order to allow for user interaction and data collection. -->
+\svp{We leveraged the `r2d3` package [@r2d3pkg] to take data randomly generated in R and create a D3 plot that could be modified with the You Draw It script. This step allowed us to more easily connect the data generation process with the resulting D3 code without having to generate new code manually each time we re-generated the data. While not strictly necessary for the validation test of the You Draw It method compared to past linear regression methods presented in this paper, this abstraction makes it much easier to test arbitrary or model-generated data which is unique to each participant.}
+
+We conducted all data simulation and processing in R and output two data sets - *point data* and *line data* - containing (x, y) coordinates corresponding to either a simulated point or fitted value predicted by a statistical model respectively. Then, the `r2d3` package converts the data sets in R to JavaScript Object Notation (JSON) to be interpreted by JavaScript code included with the `r2d3` package. 
+Parameters for aesthetic design choices are defined in a list of options in the `r2d3` function call; `r2d3` passes these to the generated JavaScript code. 
+For instance, we can specify the buffer space allowed for the $x$ and $y$ axes to avoid users \svp{anchoring} their lines to the axes limits. 
+
+## Modifying You Draw It
+\svp{
+In order to make use of the original You Draw It code for perceptual experiments, we first needed to accommodate an additional layer. The original NYT features asked participants to draw on a blank coordinate grid, as shown in @fig-nyt-screenshot.
+}
+
+![Screenshot of the [You Draw It application](https://www.nytimes.com/interactive/2015/05/28/upshot/you-draw-it-how-family-income-affects-childrens-college-chances.html) originally developed by the New York Times.](images/NYT-You-Draw-It-Screenshot.png){#fig-nyt-screenshot
+width='\columnwidth'}
+
+\svp{When testing perception of graphics, however, we want to pre-populate the chart with additional information - points, and in some cases, portions of a trend line. This requires that we modify the original JavaScript code to accommodate these additional elements, which we generate using `r2d3`, as described above.}
+
+We defined JavaScript functions to draw the initial plot and set up drawable points for the user drawn line. Drag events in `D3.js` are utilized to observe and react to user input, \svp{as in the original You Draw It script from the NYT}. ^[The full source code we developed for the YouDrawIt task is available at \url{https://github.com/earobinson95/presentations/blob/master/can-you-draw-it/www/main-d3v5.js}.]
+
+<!-- Note, we didn't modify d3.js directly, we just added additional functions that would interpret our JSON file and draw the appropriate plot. These functions were modified from the defaults automatically generated by `r2d3` -->
+
+\svp{One constraint we inherited from the NYT code is that users can only draw one-to-one functions; because the code works with drag events, each point in $x$ can correspond to only one point in $y$, at least as the code is currently written. While this is not particularly problematic for our applications to date, it might limit applications of this type of user interaction when assessing user drawn confidence bands, ribbons, and other situations where two or more vertical points are required.}
+<!-- \svp{XXX additional details of how we accomplished this XXX} -->
+
+## Visual Cues
+
+\svp{During testing of our modifications to the You Draw It script, we discovered that frequently the JavaScript code would ``skip" from point to point out of sequence. This resulted in a jagged line (visually) with missing values in the underlying stored array of data; as a result, the for-loop controlling the user-drawn line never exited and the user's data was not recorded. While it would have been possible to fix this using some sort of interpolation algorithm, we did not want to compromise user results by introducing interpolation artifacts, so we opted instead for a visual cue that fixed the problem from a psychological angle.}
+
+
+![You Draw It task plot as shown to user.    
+**left:** Initial state, with instructions *Use your mouse to fill in the trend in the yellow box region.*    
+**middle:** User view during task completion.    
+**right:** Finished state](images/ydi-stimuli.png){#fig-you-draw-it-task-plot}
+
+
+As shown in @fig-you-draw-it-task-plot, the user-filled portion of the plot is represented with a yellow rectangle, which adapts to the user's input and spans any missing values. When the box disappears, the array is filled in and the user can submit their response.
+
+
+\svp{One challenge introduced by adding this visual cue is that D3 uses Scalable Vector Graphics (SVG) to render elements. Adding an additional layer meant that we had to ensure that not only the grids, lines, and points of the default scatter plot and trend line rendered in the correct order, but that the yellow box rendered behind all of these points as well so that no information was masked.}
+
+## Connecting to Shiny
+Shiny Messages are used to communicate the user interaction between the JavaScript code and the R environment. 
+\svp{The initial plot is rendered using Shiny's `RenderD3` and `d3Output` functions; subsequent user interactions are controlled via the JavaScript code. Once the user is finished modifying the plot, they can submit their response, so long as they have filled in all of the points. This is enforced using Shiny's message-passing interface and a hook in the JavaScript code that notifies Shiny when the array of user-drawn points is completely filled in.}
+<!-- The plot is then rendered and updated on user interaction into the R shiny application with the `RenderD3` and `d3Output` functions. -->
+Once the user is done drawing the line, we save the results of the drawn line to a SQLite database, using Shiny to pass data from JavaScript to R. 
+The connections between each portion of the app are shown in @fig-you-draw-it-code-sketch.
+
+
+![Sketch of underlying code for 'You Draw It', illustrating the data simulation conducted in R, the initial setup of the visual stimuli with D3 source code, along with the iterative process between the user interaction and plotting in Shiny. Once the user is done drawing the line, we saved the results of the drawn line to a database for analysis.](images/code-sketch-2.png){#fig-you-draw-it-code-sketch}
+
+\svp{One additional challenge when integrating the D3 graphics into the Shiny application is that by default, most Shiny applications use a reactive framework that adjusts to the user's browser size. When working with D3, however, this can be problematic: most D3 parameters are specified at the pixel level. The discontinuity between the assumptions of Shiny and D3 meant that we had to fix the size of the Shiny element, and then perform a check to ensure that the user's screen was sufficiently big to render the plot. While in an ideal world, users could participate using cell phones, tablets, and traditional laptop/desktop computers, functionally our checks limited users' ability to participate using smaller screen sizes found in cell phones and some tablets. }
+
+\svp{Additionally, after some feedback by laptop users during pilot testing, we included an additional requirement that participants have a computer mouse available; the results from touchpad users were qualitatively different (more jagged) in ways suggesting that the recorded data did not adequately describe users' perceptions.}
+
+# Application
+
+## Tool Validation
+
+We conducted a study in order to validate 'You Draw It' as a method for graphical testing, comparing results to the less technological method utilized in @mosteller1981eye. Results from our study were consistent with those found in the previous study; when shown points following a linear trend, participants tended to fit the slope of the first principal component over the slope of the ordinary least-squares regression line (Figure 3). This trend was most prominent when shown data simulated with larger variances. This study reinforced the differences between intuitive visual model fitting and statistical model fitting, providing information about human perception as it relates to the use of statistical graphics.
+
+\begin{figure}[ht]
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{images/pca-plot}}
+\caption{Comparison between an OLS regression equation which minimizes the vertical distance of points from the line and a regression equation with a slope calculated by the first principal component which minimizes the smallest distance of points from the line.}
+\label{pca-plot}
+\end{center}
+\end{figure}
+
+## Data Analysis
+
+\begin{figure}[ht]
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{images/eyefitting-trial-plot}}
+\caption{Example of validation feedback data where three trend lines show the the OLS fitted, PCA fitted, and participant drawn values overlaid on the simulated data points}
+\label{eyefitting-trial-plot}
+\end{center}
+\end{figure}
+
+Feedback data from conducted studies were collected and stored in a database for analysis (Figure 4). Within the collected feedback data, we knew the simulated data points, the predicted values from the statistical model, and the predicted values from the user drawn line. In our initial studies, a unique data set was simulated independently for each participant. Therefore, we evaluate the accuracy of the user drawn line by observing the deviation, vertical residuals, between the user drawn line and the predicted values from the statistical model. Due to participant variation, we use mixed models to evaluate the vertical residuals in order to statistically compare visually fitted trends to actual metrics, simulated data models, or statistical regression results. In our validation study, we first analyzed the residual trend using a linear mixed model (LMM), thus constraining the fit to a linear trend (Figure 5). In addition, we fit a Generalized Additive Mixed Model (GAMM) to allow for flexibility in the residual trend and to generalized the method to nonlinear models (Figure 6).
+
+\begin{figure}[ht]
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{images/eyefitting-lmer-plot}}
+\caption{Validation study estimated trends of residuals (vertical deviation of participant drawn points from both the OLS (blue) and PCA (orange) fitted points) as fit by a linear mixed model.}
+\label{eyefitting-lmer-plot}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{images/eyefitting-gamm-plot}}
+\caption{Validation study estimated trends of residuals (vertical deviation of participant drawn points from both the OLS (blue) and PCA (orange) fitted points) as fit by a generalized additive mixed model.}
+\label{eyefitting-gamm-plot}
+\end{center}
+\end{figure}
+
+After validating the 'You Draw It' method, we conducted a study utilizing the new method to evaluate participants ability to make forecasts for exponentially increasing data on log and linear scales. Along with analyzing the feedback data with the GAMM method for flexibility due to nonlinear data, we used spaghetti plots to visualize participants forecasts compared to the nonlinear least squares statistical model and make comparisons between two chart design features (Figure 6).
+
+\begin{figure}[ht]
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{images/exponential-yloess-spaghetti-plot-2-1}}
+\caption{Spaghetti plot of results from a study which asked participants to forcast trends of exponentially increasing data. Participants drawn lines on the linear scale are shown in blue and the log scale are shown in orange. Variability in the statistically fitted regression lines occured due to a unique data set being simulated for each individual; the gray band shows the range fitted values from the statistically fitted regression lines.}
+\label{exponential-yloess-spaghetti-plot-2-1}
+\end{center}
+\end{figure}
+
+# Future Work
+
+In this work, we implemented and validated ‘You Draw It’ as a new method to measure the patterns we see in data. We demonstrated the use of generalized additive models to statistically model participant feedback data and generalized the analysis method to nonlinear trends. While technical details of the development process are presented here, we intend to create an R package designed for easy implementation of 'You Draw It' task plots in order to make this tool accessible to other researchers. Further investigation is necessary to implement this method with real data in order to facilitate scientific communication.

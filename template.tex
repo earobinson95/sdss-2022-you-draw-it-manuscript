@@ -1,11 +1,22 @@
 \documentclass[10pt]{article}
 
-\usepackage{sdss2020} % Uses Times Roman font (either newtx or times package)
+% \usepackage{sdss2020} % Uses Times Roman font (either newtx or times package)
 \usepackage{url}
 \usepackage{latexsym}
 \usepackage{amsmath, amsthm, amsfonts}
 \usepackage{algorithm, algorithmic}  
 \usepackage{graphicx}
+\usepackage{hyperref}
+
+\usepackage[dvipsnames]{xcolor} % colors
+\newcommand{\ear}[1]{{\textcolor{blue}{#1}}}
+\newcommand{\svp}[1]{{\textcolor{RedOrange}{#1}}}
+\newcommand{\rh}[1]{{\textcolor{Green}{#1}}}
+\usepackage[capitalise]{cleveref}
+\newcommand\pcref[1]{(\cref{#1})}
+
+\usepackage{natbib}
+\bibliographystyle{unsrtnat}
 
 $for(header-includes)$
 $header-includes$
@@ -32,21 +43,18 @@ $endfor$
 
 \begin{document}
 \maketitle
-$if(abstract)$
-\begin{abstract}
-$abstract$
-\end{abstract}
-$endif$
+% $if(abstract)$
+% \abstract{$abstract$}
+% $endif$
 
 {\bf Keywords:} $keywords$
 
 $body$
 
-\bibliographystyle{sdss2020}
 $if(bibliography)$
 \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
 $endif$
-% \bibliography{references}
+
 
 \end{document}
 

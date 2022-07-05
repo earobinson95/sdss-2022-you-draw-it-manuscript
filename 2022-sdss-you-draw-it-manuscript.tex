@@ -1,37 +1,181 @@
-\documentclass[10pt]{article}
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
 
-\usepackage{sdss2020} % Uses Times Roman font (either newtx or times package)
-\usepackage{url}
-\usepackage{latexsym}
-\usepackage{amsmath, amsthm, amsfonts}
-\usepackage{algorithm, algorithmic}  
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
 \usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \usepackage[dvipsnames]{xcolor} % colors
 \newcommand{\ear}[1]{{\textcolor{blue}{#1}}}
 \newcommand{\svp}[1]{{\textcolor{RedOrange}{#1}}}
 \newcommand{\rh}[1]{{\textcolor{Green}{#1}}}
-\usepackage[capitalise]{cleveref}
-\newcommand\pcref[1]{(\cref{#1})}
+% \usepackage[capitalise]{cleveref}
+% \newcommand\pcref[1]{(\cref{#1})}
+
+\usepackage{natbib}
+\bibliographystyle{unsrtnat}
+\KOMAoption{captions}{tableheading}
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{tcolorbox}{}{\usepackage[many]{tcolorbox}}
+\makeatother
+\makeatletter
+\@ifundefined{shadecolor}{\definecolor{shadecolor}{rgb}{.97, .97, .97}}
+\makeatother
+\makeatletter
+\makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={`You Draw It': Implementation of visually fitted trends with r2d3},
+  pdfkeywords={graphics, user interaction, regression},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
 
 \title{`You Draw It': Implementation of visually fitted trends with
 \texttt{r2d3}}
-
-%\author{by }
-\author{
-  Emily A. Robinson \\
-  \small{University of Nebraska - Lincoln}\\
-  \small{Lincoln, NE} \\
-  \small{\tt emily.robinson@huskers.unl.edu} \\\And
- Reka Howard \\
-  \small{University of Nebraska - Lincoln}\\
-  \small{Lincoln, NE} \\
-  \small{\tt rekahoward@unl.edu} \\\And
-  Susan VanderPlas \\
-  \small{University of Nebraska - Lincoln}\\
-  \small{Lincoln, NE} \\
-  \small{\tt susan.vanderplas@unl.edu} \\}
-
+\author{}
 \date{}
 
 \begin{document}
@@ -48,184 +192,206 @@ metrics and compare how these assumptions relate to reality. This
 research is intended to implement `You Draw It', adapted from the New
 York Times, as a way to measure the patterns we see in data.
 \end{abstract}
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, breakable, borderline west={3pt}{0pt}{shadecolor}, sharp corners, enhanced, frame hidden, boxrule=0pt]}{\end{tcolorbox}}\fi
 
-{\bf Keywords:} graphics, user interaction, regression
-
-\section{Introduction}
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
 
 We all use statistical graphics, but how do we know that the graphics we
-use are communicating {\textcolor{RedOrange}{effectively}}? Through
-experimentation, graphical testing methods allow researchers to conduct
-studies
-{\textcolor{RedOrange}{designed to understand how we perceive graphics and perform graphical tasks}}
+use are communicating \svp{effectively}? Through experimentation,
+graphical testing methods allow researchers to conduct studies
+\svp{designed to understand how we perceive graphics and perform graphical tasks}
 such as differentiation, prediction, estimation, and extrapolation.
-{\textcolor{RedOrange}{Each of these levels of interaction with a graph require a different method of engagement with and use of the information presented in a chart.}}
-{\textcolor{RedOrange}{In this paper, we describe the adaptation of an old tool for graphical testing and evaluation, eye-fitting, for use in modern web-applications suitable for testing statistical graphics. 
-We present an empirical evaluation of this testing method for linear regression, and briefly discuss an extension of this method to non-linear applications.}}
+\svp{Each of these levels of interaction with a graph require a different method of engagement with and use of the information presented in a chart.}
+\svp{In this paper, we describe the adaptation of an old tool for graphical testing and evaluation, eye-fitting, for use in modern web-applications suitable for testing statistical graphics. 
+We present an empirical evaluation of this testing method for linear regression, and briefly discuss an extension of this method to non-linear applications.}
 
-\subsection{Measuring Patterns and Trends}
-
-{\textcolor{RedOrange}{One of the most common charts created is a scatter plot of points over time; these charts show up regularly in news articles and in scientific publications alike.
-These charts rely on our}} ability to identify and detect trends in
-data. Our visual system is naturally built to look for structure and
-identify patterns,
-{\textcolor{RedOrange}{including patterns and trends over time; many times we do not even notice this process happening subconsciously}}.
-{\textcolor{RedOrange}{As shown in \cref{fig:gas-prices}, a viewer engaging with a plot of weekly average gas prices over time may perform several cognitive operations. First, they scan the plot and assesses points to determine if there are any outliers or otherwise remarkable points. Then, they may fit a rough mental smooth/trend line to the points to summarize the useful information and remove variability. Finally, an interested and engaged viewer may pull in additional contextual information from long-term memory, seeking to explain variation in the mental 'trend' with supplemental information, such as COVID lock downs which reduced gasoline demand and the beginning of the war in Ukraine, which wreaked havoc on the supply and demand for global energy sources.}}
+\svp{One of the most common charts created is a scatter plot of points over time; these charts show up regularly in news articles and in scientific publications alike.
+These charts rely on our} ability to identify and detect trends in data.
+Our visual system is naturally built to look for structure and identify
+patterns,
+\svp{including patterns and trends over time; many times we do not even notice this process happening subconsciously}.
+\svp{As shown in @fig:gas-prices, a viewer engaging with a plot of weekly average gas prices over time may perform several cognitive operations. First, they scan the plot and assesses points to determine if there are any outliers or otherwise remarkable points. Then, they may fit a rough mental smooth/trend line to the points to summarize the useful information and remove variability. Finally, an interested and engaged viewer may pull in additional contextual information from long-term memory, seeking to explain variation in the mental 'trend' with supplemental information, such as COVID lock downs which reduced gasoline demand and the beginning of the war in Ukraine, which wreaked havoc on the supply and demand for global energy sources.}
 
 \begin{figure}
 
-{\centering \includegraphics[width=\columnwidth]{./images/gas-prices-1} 
+{\centering \includegraphics{./images/gas-prices-1.pdf}
 
 }
 
-\caption{Weekly average gas prices in the United States, 2019-June 2022. Additional mental operations a viewer might perform while looking at the plot are annotated in grey. \cite{usenergyinformationadministrationWeeklyAllGrades2022}.}\label{fig:gas-prices}
+\caption{Weekly average gas prices in the United States, 2019-June 2022.
+Additional mental operations a viewer might perform while looking at the
+plot are annotated in grey. US Energy Information Administration (2022)}
+
 \end{figure}
 
 Initial studies in the 20th century explored the use of fitting lines by
-eye through a set of points
-\cite{finney1951subjective,mosteller1981eye}. Common methods of fitting
-trends by eye involved maneuvering a string, black thread, or ruler
-until the fit was suitable, then drawing the line through the set of
-points. Recently, Ciccione and Dehaene \shortcite{ciccione2021can}
+eye through a set of points (Finney 1951, mosteller1981eye). Common
+methods of fitting trends by eye involved maneuvering a string, black
+thread, or ruler until the fit was suitable, then drawing the line
+through the set of points. Recently, Ciccione and Dehaene (2021)
 conducted a comprehensive set of studies investigating human ability to
 detect trends in graphical representations from a psychophysical
-approach.{\textcolor{RedOrange}{XXX and found what? Describe the results XXX}}
+approach.\svp{XXX and found what? Describe the results XXX}
 
-{\textcolor{RedOrange}{While psychologists and statisticians have been using eye-fitting techniques to assess our innate perceptual statistical modeling abilities, news organizations have used similar techniques in order to draw readers in and demonstrate the difference between readers' assumptions and reality.}}
+\svp{While psychologists and statisticians have been using eye-fitting techniques to assess our innate perceptual statistical modeling abilities, news organizations have used similar techniques in order to draw readers in and demonstrate the difference between readers' assumptions and reality.}
 In 2015, the New York Times introduced an interactive feature, called
-`You Draw It' \cite{aisch2015you}, where readers input their own
-assumptions about various
-{\textcolor{RedOrange}{metrics of news interest}} and compare these
-assumptions to reality. The New York Times team used Data Driven
-Documents (D3), {\textcolor{RedOrange}{a JavaScript library}} that
-allows readers to
-{\textcolor{RedOrange}{interact with a chart directly by}} drawing a
-line on their computer screen with a mouse.
-{\textcolor{RedOrange}{Despite the somewhat different purpose behind this feature, the D3 driven method used by the NYT is wonderfully intuitive, and does not require the assumption of linearity, making it much more adaptable to testing how viewers perceive and predict when presented with non-linear data.}}
+`You Draw It' (Aisch, Cox, and Quealy 2015), where readers input their
+own assumptions about various \svp{metrics of news interest} and compare
+these assumptions to reality. The New York Times team used Data Driven
+Documents (D3), \svp{a JavaScript library} that allows readers to
+\svp{interact with a chart directly by} drawing a line on their computer
+screen with a mouse.
+\svp{Despite the somewhat different purpose behind this feature, the D3 driven method used by the NYT is wonderfully intuitive, and does not require the assumption of linearity, making it much more adaptable to testing how viewers perceive and predict when presented with non-linear data.}
 
-{\textcolor{RedOrange}{We set out to implement}} `You Draw It', adapted
-from the New York Times feature, as a way to experimentally assess the
-patterns we see in data. Here, we provide technical details of the
-software development, utilizing interactive graphics in
-R\cite{r-software}. We then share results from our study which validates
-`You Draw It' as a method for graphical testing
-{\textcolor{RedOrange}{on linear trends}} and apply an appropriate data
+\svp{We set out to implement} `You Draw It', adapted from the New York
+Times feature, as a way to experimentally assess the patterns we see in
+data. Here, we provide technical details of the software development,
+utilizing interactive graphics in R(R Core Team 2022). We then share
+results from our study which validates `You Draw It' as a method for
+graphical testing \svp{on linear trends} and apply an appropriate data
 analysis method to the participant data.
-{\textcolor{RedOrange}{We also briefly demonstrate the use of the 'You Draw It' method and analysis on nonlinear data.}}
+\svp{We also briefly demonstrate the use of the 'You Draw It' method and analysis on nonlinear data.}
 
-\section{Development}
+\hypertarget{development}{%
+\section{Development}\label{development}}
 
-\subsection{`You Draw It' Task}
+\hypertarget{you-draw-it-v0}{%
+\subsection{You Draw It v0}\label{you-draw-it-v0}}
 
-When completing the graphical task, users are shown an interactive
-scatter-plot (Figure 1) along with the prompt, ``Use your mouse to fill
-in the trend in the yellow box region.'' The yellow box region moves
-along as the user draws their trend-line, providing a visual cue which
-indicates where the user still needs to complete a trend line. After the
-entire domain has been visually estimated or predicted, the yellow
-region disappears, indicating the participant has completed the task.
-Prior to study participation, example gifs are shown and users are asked
-to complete practice plots to ease the learning curve of the task.
-\footnote{Visit \url{emily-robinson.shinyapps.io/can-you-draw-it} for a
-  test applet.}
+\svp{Describe the NYT code - what it does, how it works (for loop to connect mouse coordinates to closest point via inverting the scales)}
 
-\begin{figure}[ht]
-\begin{center}
-\centerline{\includegraphics[width=\columnwidth]{images/ydi-stimuli}}
-\caption{You Draw It' task plot as shown to user. \\
-\textbf{left:} illustrates what user first sees with the prompt \textit{Use your mouse to fill in the trend in the yellow box region.} \\
-\textbf{middle:} illustrates what the user sees while completing the task.\\
-\textbf{right:} illustrates the users finished trend line.}
-\label{you-draw-it-task-plot}
-\end{center}
-\end{figure}
+\svp{The New York Times uses D3, Data Driven Documents [@bostock2011d3], to create many of the interactive data graphics that users rely on, from the famous "election needle" in 2016 to their covid dashboards. Naturally, this same framework was used}
+to create the `You Draw It' \svp{feature}.
 
-\subsection{Code Sketch}
+A challenge of working with D3 is the environment necessary to display
+the graphics and images.
+\svp{XXX What environment, why is this a challenge, and how did you overcome it?}
 
-Using Shiny \cite{shinypkg} and JavaScript, we modified the New York
-Times `You Draw It' feature for the purpose of testing statistical
-graphics allowing us to incorporate user interaction, conduct studies
-online, and store participant responses.
+\hypertarget{generating-d3-plots-in-r}{%
+\subsection{Generating D3 Plots in R}\label{generating-d3-plots-in-r}}
 
-Data Driven Documents (D3) \cite{bostock2011d3}, a JavaScript-based
-graphing framework that facilitates user interaction, was used to create
-the `You Draw It' visual. Major news and research organizations such as
-the New York Times, FiveThirtyEight, Washington Post, and the pew
-Research Center use D3 to create and customize graphics. A challenge of
-working with D3 is the environment necessary to display the graphics and
-images. The \texttt{r2d3} package \cite{r2d3pkg} provides an efficient
-integration of D3 visuals into R HTML formats. We integrate the D3
-visual source code into an R Shiny \cite{shinypkg} application in order
-to allow for user interaction and data collection.
+\svp{Describe the process of using `r2d3`}
 
-Figure 2 illustrates the initial setup of the visual stimuli along with
-the iterative process between the user interaction and plotting. We
-conducted all data simulation and processing in R and output two data
+\svp{We leveraged the `r2d3` package [@r2d3pkg] to take data randomly generated in R and create a D3 plot that could be modified with the You Draw It script. This step allowed us to more easily connect the data generation process with the resulting D3 code without having to generate new code manually each time we re-generated the data. While not strictly necessary for the validation test of the You Draw It method compared to past linear regression methods presented in this paper, this abstraction makes it much easier to test arbitrary or model-generated data which is unique to each participant.}
+
+We conducted all data simulation and processing in R and output two data
 sets - \emph{point data} and \emph{line data} - containing (x, y)
 coordinates corresponding to either a simulated point or fitted value
-predicted by a statistical model respectively. Then, the r2d3 package
-converts the data sets in R to JavaScript Object Notation (JSON) to be
-interpreted by the \texttt{D3.js} code. We define functions in
-\texttt{D3.js} to draw the initial plot and set up drawable points for
-the user drawn line. Drag events in \texttt{D3.js} are utilized to
-observe and react to user input. Shiny Messages are used to communicate
-the user interaction between the \texttt{D3.js} code and the R
-environment. The plot is then rendered and updated on user interaction
-into the R shiny application with the \texttt{RenderD3} and
-\texttt{d3Output} functions. Once the user is done drawing the line, we
-saved the results of the drawn line to a database for analysis.
+predicted by a statistical model respectively. Then, the \texttt{r2d3}
+package converts the data sets in R to JavaScript Object Notation (JSON)
+to be interpreted by JavaScript code included with the \texttt{r2d3}
+package. Parameters for aesthetic design choices are defined in a list
+of options in the \texttt{r2d3} function call; \texttt{r2d3} passes
+these to the generated JavaScript code. For instance, we can specify the
+buffer space allowed for the \(x\) and \(y\) axes to avoid users
+\svp{anchoring} their lines to the axes limits.
 
-\begin{figure}[ht]
-\begin{center}
-\centerline{\includegraphics[width=\columnwidth]{images/code-sketch-2}}
-\caption{Sketch of underlying code for 'You Draw It', illustrating the data simulation conducted in R, the initial setup of the visual stimuli with D3 source code, along with the iterative process between the user interaction and plotting in Shiny. Once the user is done drawing the line, we saved the results of the drawn line to a database for analysis.}
-\label{you-draw-it-code-sketch}
-\end{center}
+\hypertarget{modifying-you-draw-it}{%
+\subsection{Modifying You Draw It}\label{modifying-you-draw-it}}
+
+\svp{
+In order to make use of the original You Draw It code for perceptual experiments, we first needed to accommodate an additional layer. The original NYT features asked participants to draw on a blank coordinate grid, as shown in @fig-nyt-screenshot.
+}
+
+\begin{figure}
+
+{\centering \includegraphics{images/NYT-You-Draw-It-Screenshot.png}
+
+}
+
+\caption{\label{fig-nyt-screenshot}Screenshot of the
+\href{https://www.nytimes.com/interactive/2015/05/28/upshot/you-draw-it-how-family-income-affects-childrens-college-chances.html}{You
+Draw It application} originally developed by the New York Times.}
+
 \end{figure}
 
-Parameters for aesthetic design choices are defined in a list of options
-and \texttt{r2d3} passes these to the D3.js code. For instance, we can
-specify the buffer space allowed for the \(x\) and \(y\) axes to avoid
-users to anchor their lines to the axes limits. \footnote{For
-  \texttt{D3.js} source code, visit
+\svp{When testing perception of graphics, however, we want to pre-populate the chart with additional information - points, and in some cases, portions of a trend line. This requires that we modify the original JavaScript code to accommodate these additional elements, which we generate using `r2d3`, as described above.}
+
+We defined JavaScript functions to draw the initial plot and set up
+drawable points for the user drawn line. Drag events in \texttt{D3.js}
+are utilized to observe and react to user input,
+\svp{as in the original You Draw It script from the NYT}. \footnote{The
+  full source code we developed for the YouDrawIt task is available at
   \url{https://github.com/earobinson95/presentations/blob/master/can-you-draw-it/www/main-d3v5.js}.}
 
-\subsection{Challenges}
+\svp{One constraint we inherited from the NYT code is that users can only draw one-to-one functions; because the code works with drag events, each point in $x$ can correspond to only one point in $y$, at least as the code is currently written. While this is not particularly problematic for our applications to date, it might limit applications of this type of user interaction when assessing user drawn confidence bands, ribbons, and other situations where two or more vertical points are required.}
 
-During the development process, there were a few challenges we had to
-overcome. We documented these challenges with GitHub commits and outline
-places where frustration occurred. Data Driven documents uses Scalable
-Vector Graphics (SVG), thus requiring careful transformation between the
-pixels and plot coordinates to align the simulated data and the user
-drawn line appropriately. With the layered framework of SVG's, it was
-important to place the layers in the right order so certain features
-would appear where desired. For example, we wanted the opacity of the
-yellow box region to appear under the points while still showing the
-grid lines. As previously mentioned, \texttt{r2d3} automatically
-converts the data set to a JSON file to be interpreted by the underlying
-source code, however we provided two data sets (point data and line
-data) and converted the two data sets to a JSON file before passing them
-to the \texttt{r2d3} argument so that we could reference both data sets
-within the \texttt{D3.js} code. One constraint of the development code
-to date is that it is only built to work with one-to-one functions and
-does not allow for multiple estimates or predictions for one
-\(x\)-value.
+\hypertarget{visual-cues}{%
+\subsection{Visual Cues}\label{visual-cues}}
 
-\section{Application}
+\svp{During testing of our modifications to the You Draw It script, we discovered that frequently the JavaScript code would ``skip" from point to point out of sequence. This resulted in a jagged line (visually) with missing values in the underlying stored array of data; as a result, the for-loop controlling the user-drawn line never exited and the user's data was not recorded. While it would have been possible to fix this using some sort of interpolation algorithm, we did not want to compromise user results by introducing interpolation artifacts, so we opted instead for a visual cue that fixed the problem from a psychological angle.}
 
-\subsection{Tool Validation}
+\begin{figure}
+
+{\centering \includegraphics{images/ydi-stimuli.png}
+
+}
+
+\caption{\label{fig-you-draw-it-task-plot}You Draw It task plot as shown
+to user.\\
+\textbf{left:} Initial state, with instructions \emph{Use your mouse to
+fill in the trend in the yellow box region.}\\
+\textbf{middle:} User view during task completion.\\
+\textbf{right:} Finished state}
+
+\end{figure}
+
+As shown in Figure~\ref{fig-you-draw-it-task-plot}, the user-filled
+portion of the plot is represented with a yellow rectangle, which adapts
+to the user's input and spans any missing values. When the box
+disappears, the array is filled in and the user can submit their
+response.
+
+\svp{One challenge introduced by adding this visual cue is that D3 uses Scalable Vector Graphics (SVG) to render elements. Adding an additional layer meant that we had to ensure that not only the grids, lines, and points of the default scatter plot and trend line rendered in the correct order, but that the yellow box rendered behind all of these points as well so that no information was masked.}
+
+\hypertarget{connecting-to-shiny}{%
+\subsection{Connecting to Shiny}\label{connecting-to-shiny}}
+
+Shiny Messages are used to communicate the user interaction between the
+JavaScript code and the R environment.
+\svp{The initial plot is rendered using Shiny's `RenderD3` and `d3Output` functions; subsequent user interactions are controlled via the JavaScript code. Once the user is finished modifying the plot, they can submit their response, so long as they have filled in all of the points. This is enforced using Shiny's message-passing interface and a hook in the JavaScript code that notifies Shiny when the array of user-drawn points is completely filled in.}
+Once the user is done drawing the line, we save the results of the drawn
+line to a SQLite database, using Shiny to pass data from JavaScript to
+R. The connections between each portion of the app are shown in
+Figure~\ref{fig-you-draw-it-code-sketch}.
+
+\begin{figure}
+
+{\centering \includegraphics{images/code-sketch-2.png}
+
+}
+
+\caption{\label{fig-you-draw-it-code-sketch}Sketch of underlying code
+for `You Draw It', illustrating the data simulation conducted in R, the
+initial setup of the visual stimuli with D3 source code, along with the
+iterative process between the user interaction and plotting in Shiny.
+Once the user is done drawing the line, we saved the results of the
+drawn line to a database for analysis.}
+
+\end{figure}
+
+\svp{One additional challenge when integrating the D3 graphics into the Shiny application is that by default, most Shiny applications use a reactive framework that adjusts to the user's browser size. When working with D3, however, this can be problematic: most D3 parameters are specified at the pixel level. The discontinuity between the assumptions of Shiny and D3 meant that we had to fix the size of the Shiny element, and then perform a check to ensure that the user's screen was sufficiently big to render the plot. While in an ideal world, users could participate using cell phones, tablets, and traditional laptop/desktop computers, functionally our checks limited users' ability to participate using smaller screen sizes found in cell phones and some tablets. }
+
+\svp{Additionally, after some feedback by laptop users during pilot testing, we included an additional requirement that participants have a computer mouse available; the results from touchpad users were qualitatively different (more jagged) in ways suggesting that the recorded data did not adequately describe users' perceptions.}
+
+\hypertarget{application}{%
+\section{Application}\label{application}}
+
+\hypertarget{tool-validation}{%
+\subsection{Tool Validation}\label{tool-validation}}
 
 We conducted a study in order to validate `You Draw It' as a method for
 graphical testing, comparing results to the less technological method
-utilized in Mosteller et al.~\shortcite{mosteller1981eye}. Results from
-our study were consistent with those found in the previous study; when
-shown points following a linear trend, participants tended to fit the
-slope of the first principal component over the slope of the ordinary
-least-squares regression line (Figure 3). This trend was most prominent
-when shown data simulated with larger variances. This study reinforced
-the differences between intuitive visual model fitting and statistical
-model fitting, providing information about human perception as it
-relates to the use of statistical graphics.
+utilized in Mosteller et al. (1981). Results from our study were
+consistent with those found in the previous study; when shown points
+following a linear trend, participants tended to fit the slope of the
+first principal component over the slope of the ordinary least-squares
+regression line (Figure 3). This trend was most prominent when shown
+data simulated with larger variances. This study reinforced the
+differences between intuitive visual model fitting and statistical model
+fitting, providing information about human perception as it relates to
+the use of statistical graphics.
 
 \begin{figure}[ht]
 \begin{center}
@@ -235,7 +401,8 @@ relates to the use of statistical graphics.
 \end{center}
 \end{figure}
 
-\subsection{Data Analysis}
+\hypertarget{data-analysis}{%
+\subsection{Data Analysis}\label{data-analysis}}
 
 \begin{figure}[ht]
 \begin{center}
@@ -295,7 +462,8 @@ statistical model and make comparisons between two chart design features
 \end{center}
 \end{figure}
 
-\section{Future Work}
+\hypertarget{future-work}{%
+\section{Future Work}\label{future-work}}
 
 In this work, we implemented and validated `You Draw It' as a new method
 to measure the patterns we see in data. We demonstrated the use of
@@ -307,9 +475,42 @@ Draw It' task plots in order to make this tool accessible to other
 researchers. Further investigation is necessary to implement this method
 with real data in order to facilitate scientific communication.
 
-\bibliographystyle{sdss2020}
-\bibliography{references.bib}
-% \bibliography{references}
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-aisch2015you}{}}%
+Aisch, Gregor, Amanda Cox, and Kevin Quealy. 2015. {``You Draw It: How
+Family Income Predicts Children's College Chances.''} \emph{The New York
+Times} 28.
+
+\leavevmode\vadjust pre{\hypertarget{ref-ciccione2021can}{}}%
+Ciccione, Lorenzo, and Stanislas Dehaene. 2021. {``Can Humans Perform
+Mental Regression on a Graph? Accuracy and Bias in the Perception of
+Scatterplots.''} \emph{Cognitive Psychology} 128: 101406.
+
+\leavevmode\vadjust pre{\hypertarget{ref-finney1951subjective}{}}%
+Finney, DJ. 1951. {``Subjective Judgment in Statistical Analysis: An
+Experimental Study.''} \emph{Journal of the Royal Statistical Society:
+Series B (Methodological)} 13 (2): 284--97.
+
+\leavevmode\vadjust pre{\hypertarget{ref-mosteller1981eye}{}}%
+Mosteller, Frederick, Andrew F Siegel, Edward Trapido, and Cleo Youtz.
+1981. {``Eye Fitting Straight Lines.''} \emph{The American Statistician}
+35 (3): 150--52.
+
+\leavevmode\vadjust pre{\hypertarget{ref-r-software}{}}%
+R Core Team. 2022. \emph{R: A Language and Environment for Statistical
+Computing}. Vienna, Austria: R Foundation for Statistical Computing.
+\url{https://www.R-project.org/}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-usenergyinformationadministrationWeeklyAllGrades2022}{}}%
+US Energy Information Administration. 2022. {``Weekly {U}.{S}. {All}
+{Grades} {All} {Formulations} {Retail} {Gasoline} {Prices} ({Dollars}
+Per {Gallon}).''} \emph{US Energy Information Administration Independent
+Statistics \& Analysis}.
+\url{https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET\&s=EMM_EPM0_PTE_NUS_DPG\&f=W}.
+
+\end{CSLReferences}
+
+
 
 \end{document}
-
