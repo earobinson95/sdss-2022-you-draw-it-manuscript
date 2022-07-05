@@ -48,9 +48,9 @@ We present an empirical evaluation of this testing method for linear regression,
 
 \subsection{Measuring Patterns and Trends}
 \svp{One of the most common charts created is a scatter plot of points over time; these charts show up regularly in news articles and in scientific publications alike.
-These charts rely on our }ability to identify and detect trends in data. 
-Our visual system is naturally built to look for structure and identify patterns, \svp{including patterns and trends over time}. 
-\svp{As shown in \cref{fig:gas-prices}, a viewer engaging with a plot of weekly average gas prices over time will likely perform several cognitive operations. First, they scan the plot and assesses points to determine if there are any outliers or otherwise remarkable points. Then, they may fit a rough mental smooth/trend line to the points to summarize the useful information and remove variability. Finally, the viewer may pull in additional contextual information from long-term memory, seeking to explain variation in the mental 'trend' with supplemental information, such as COVID lock downs which reduced gasoline demand and the beginning of the war in Ukraine, which wreaked havoc on the supply and demand for global energy sources.}
+These charts rely on our} ability to identify and detect trends in data. 
+Our visual system is naturally built to look for structure and identify patterns, \svp{including patterns and trends over time; many times we do not even notice this process happening subconsciously}. 
+\svp{As shown in \cref{fig:gas-prices}, a viewer engaging with a plot of weekly average gas prices over time may perform several cognitive operations. First, they scan the plot and assesses points to determine if there are any outliers or otherwise remarkable points. Then, they may fit a rough mental smooth/trend line to the points to summarize the useful information and remove variability. Finally, an interested and engaged viewer may pull in additional contextual information from long-term memory, seeking to explain variation in the mental 'trend' with supplemental information, such as COVID lock downs which reduced gasoline demand and the beginning of the war in Ukraine, which wreaked havoc on the supply and demand for global energy sources.}
 
 ```{r gas-prices, echo = F, message = F, warning = F}
 #| fig-cap: "Weekly average gas prices in the United States, 2019-June 2022. Additional mental operations a viewer might perform while looking at the plot are annotated in grey. \\cite{usenergyinformationadministrationWeeklyAllGrades2022}."
