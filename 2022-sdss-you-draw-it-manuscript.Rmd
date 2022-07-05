@@ -29,30 +29,65 @@ library(readr)
 library(tidyverse)
 library(knitr)
 library(bibtex)
+theme_set(theme_bw())
+
+library(readxl)
+library(lubridate)
 ```
 
 \section{Introduction}
 
-We all use statistical graphics, but how do we know that the graphics we use are communicating properly?
-Through experimentation, graphical testing methods allow researchers to conduct studies geared at understanding human ability to conduct tasks related to the perception of statistical charts such as differentiation, prediction, estimation, and extrapolation.
-All of these types of tests require different levels of use and manipulation of the information being presented in the chart.
-Efforts in the field of statistical graphics have developed graphical testing tools and methods, such as the lineup protocol \cite{buja2009statistical}. 
-The advancement of graphing software provides the tools necessary to develop new methods of testing statistical graphics.
+We all use statistical graphics, but how do we know that the graphics we use are communicating \svp{effectively}?
+Through experimentation, graphical testing methods allow researchers to conduct studies \svp{designed to understand how we perceive graphics and perform graphical tasks} such as differentiation, prediction, estimation, and extrapolation. 
+\svp{Each of these levels of interaction with a graph require a different method of engagement with and use of the information presented in a chart.}
+<!-- All of these types of tests require different levels of use and manipulation of the information being presented in the chart. -->
+<!-- Efforts in the field of statistical graphics have developed graphical testing tools and methods, such as the lineup protocol \cite{buja2009statistical}.  -->
+<!-- The advancement of graphing software provides the tools necessary to develop new methods of testing statistical graphics. -->
+\svp{In this paper, we describe the adaptation of an old tool for graphical testing and evaluation, eye-fitting, for use in modern web-applications suitable for testing statistical graphics. 
+We present an empirical evaluation of this testing method for linear regression, and briefly discuss an extension of this method to non-linear applications.}
 
 \subsection{Measuring Patterns and Trends}
+\svp{One of the most common charts created is a scatter plot of points over time; these charts show up regularly in news articles and in scientific publications alike.
+These charts rely on our }ability to identify and detect trends in data. 
+Our visual system is naturally built to look for structure and identify patterns, \svp{including patterns and trends over time}. 
+\svp{As shown in \cref{fig:gas-prices}, a viewer engaging with a plot of weekly average gas prices over time will likely perform several cognitive operations. First, they scan the plot and assesses points to determine if there are any outliers or otherwise remarkable points. Then, they may fit a rough mental smooth/trend line to the points to summarize the useful information and remove variability. Finally, the viewer may pull in additional contextual information from long-term memory, seeking to explain variation in the mental 'trend' with supplemental information, such as COVID lock downs which reduced gasoline demand and the beginning of the war in Ukraine, which wreaked havoc on the supply and demand for global energy sources.}
 
-One such aspect of interest is the ability to identify and detect trends in data. 
-Our visual system is naturally built to look for structure and identify patterns. 
-For instance, points going down from left to right indicates a negative correlation between the $x$ and $y$ variables. 
+```{r gas-prices, echo = F, message = F, warning = F}
+#| fig-cap: "Weekly average gas prices in the United States, 2019-June 2022. Additional mental operations a viewer might perform while looking at the plot are annotated in grey. \\cite{usenergyinformationadministrationWeeklyAllGrades2022}."
+#| out-width: "\\columnwidth"
+#| label: gas-prices
+#| fig-res: 300
+#| fig-width: 8
+#| fig-height: 4
+#| fig-env: figure
 
-Initial studies in the 20th century explored the use of fitting lines by eye through a set of points \cite{finney1951subjective,mosteller1981eye}. Common methods of fitting trends by eye involved maneuvering a string, black thread, or ruler until the fit is suitable, then drawing the line through the set of points. Recently, Ciccione and Dehaene \shortcite{ciccione2021can} conducted a comprehensive set of studies investigating human ability to detect trends in graphical representations from a psychophysical approach.
+gas <- read_xls("EMM_EPM0_PTE_NUS_DPGw.xls", skip = 3, sheet = 2) %>%
+  set_names(c("Date", "Price"))
 
-In 2015, the New York Times introduced an interactive feature, called 'You Draw It' \cite{aisch2015you}, where readers input their own assumptions about various metrics and compare how these assumptions relate to reality. The New York Times team utilizes Data Driven Documents (D3) that allows readers to predict these metrics through the use of drawing a line on their computer screen with their mouse. 
+annotations <- tibble(
+  xmin = as.POSIXct(ymd(c("2020-03-15", "2022-02-26"))),
+  xmax = as.POSIXct(ymd(c("2020-05-30", "2022-06-29"))),
+  ymin = -Inf,
+  ymax = Inf,
+  label = c("COVID lockdowns", "War in Ukraine")
+)
+ggplot(gas, aes(x = Date, y = Price)) + 
+  geom_rect(data = annotations, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax), alpha= 0.2, fill = "grey", inherit.aes = F) + 
+  geom_text(data = annotations, aes(x = xmin, y = 1, label = label), color = "grey") + 
+  ylab("Price per Gallon ($)") + 
+  ggtitle("Weekly Average Gas Prices in the United States, 2019 - 2022", subtitle = "US Energy Information Administration") + 
+  geom_point() + 
+  scale_x_datetime(limits = as.POSIXct(ymd("2019-01-01", "2022-06-29"))) + 
+  geom_line(se = F, color = "grey", method = "loess", span = .1, alpha = .5, stat = "smooth", size = 1.5)
+```
 
-What remains to be determined is how we can compare our intuitive visual sense of patterns to those determined by statistical methods.
+Initial studies in the 20th century explored the use of fitting lines by eye through a set of points \cite{finney1951subjective,mosteller1981eye}. Common methods of fitting trends by eye involved maneuvering a string, black thread, or ruler until the fit was suitable, then drawing the line through the set of points. Recently, Ciccione and Dehaene \shortcite{ciccione2021can} conducted a comprehensive set of studies investigating human ability to detect trends in graphical representations from a psychophysical approach.\svp{XXX and found what? Describe the results XXX}
 
-\subsection{Research Objectives}
-The goal of this research is to implement ‘You Draw It’, adapted from the New York Times feature, as a way to measure the patterns we see in data. Here, we provide technical details of the software development, utilizing interactive graphics in R. We then share results from our study which validates 'You Draw It' as a method for graphical testing and apply an appropriate data analysis method to the participant data.
+\svp{While psychologists and statisticians have been using eye-fitting techniques to assess our innate perceptual statistical modeling abilities, news organizations have used similar techniques in order to draw readers in and demonstrate the difference between readers' assumptions and reality.} In 2015, the New York Times introduced an interactive feature, called 'You Draw It' \cite{aisch2015you}, where readers input their own assumptions about various \svp{metrics of news interest} and compare these assumptions to reality. The New York Times team used Data Driven Documents (D3), \svp{a JavaScript library} that allows readers to \svp{interact with a chart directly by} drawing a line on their computer screen with a mouse. \svp{Despite the somewhat different purpose behind this feature, the D3 driven method used by the NYT is wonderfully intuitive, and does not require the assumption of linearity, making it much more adaptable to testing how viewers perceive and predict when presented with non-linear data.}
+
+\svp{We set out to implement} ‘You Draw It’, adapted from the New York Times feature, as a way to measure the patterns we see in data. 
+Here, we provide technical details of the software development, utilizing interactive graphics in R\cite{r-software}. 
+We then share results from our study which validates 'You Draw It' as a method for graphical testing \svp{on linear trends} and apply an appropriate data analysis method to the participant data. \svp{We also briefly demonstrate the use of the 'You Draw It' method and analysis on nonlinear data.}
 
 \section{Development}
 
