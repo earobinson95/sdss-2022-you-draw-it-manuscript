@@ -156,6 +156,8 @@ The connections between each portion of the app are shown in @fig-you-draw-it-co
 
 # Application
 
+\svp{Describe the experiment formally. Don't be afraid to quote Mosteller's paper if you think it's necessary. Focus on one set of plots from the Mosteller paper and one set of plots from our exponential stuff, so you're demonstrating linear and nonlinear analysis. Include basic demographics, and compare to Mosteller's paper - we also had a sample of highly educated individuals. Right now you have a very short summary, but you need to actually explain the full process behind it, with all of the details you'd expect from a full experimental writeup.}
+
 ## Tool Validation
 
 We conducted a study in order to validate 'You Draw It' as a method for graphical testing, comparing results to the less technological method utilized in @mosteller1981eye. Results from our study were consistent with those found in the previous study; when shown points following a linear trend, participants tended to fit the slope of the first principal component over the slope of the ordinary least-squares regression line (Figure 3). This trend was most prominent when shown data simulated with larger variances. This study reinforced the differences between intuitive visual model fitting and statistical model fitting, providing information about human perception as it relates to the use of statistical graphics.
@@ -169,6 +171,8 @@ We conducted a study in order to validate 'You Draw It' as a method for graphica
 \end{figure}
 
 ## Data Analysis
+
+\svp{Explain why our method works so well here - you can actually test whether the PCA residuals are closer than the OLS residuals formally, where Mosteller et al just said "seems like". Your method also extends beyond OLS using GAMMs. Fully describe the models you fit - assumptions, equations, etc.}
 
 \begin{figure}[ht]
 \begin{center}
@@ -206,6 +210,16 @@ After validating the 'You Draw It' method, we conducted a study utilizing the ne
 \end{center}
 \end{figure}
 
-# Future Work
+\svp{It's also worth remarking on the effectiveness of the spaghetti plots and GAMM plots for visual analysis of the results. Gotta keep pounding the "visual analytics is statistics" drum a bit :). }
 
-In this work, we implemented and validated ‘You Draw It’ as a new method to measure the patterns we see in data. We demonstrated the use of generalized additive models to statistically model participant feedback data and generalized the analysis method to nonlinear trends. While technical details of the development process are presented here, we intend to create an R package designed for easy implementation of 'You Draw It' task plots in order to make this tool accessible to other researchers. Further investigation is necessary to implement this method with real data in order to facilitate scientific communication.
+# Conclusion
+
+\svp{The data presented in this paper are part of a much broader experiment on the perception of log scales; while this paper focuses primarily on the computational implementation of the You Draw It method and its adaptation to testing graphics, we are currently finishing the analysis and description of the broader experiment, which uses this You Draw It method to assess user prediction of exponential trends.}
+
+\svp{By introducing an interactive method for assessing eye-fit data summaries, along with an analysis method which allows us to test competing hypotheses to determine whether user responses are similar to particular statistical models, we have provided another tool for experimentally testing statistical charts. In the future, we hope to create an R package to more easily facilitate these types of user experiments, making this technique available to other researchers who may not be willing to tinker with JavaScript directly.}
+
+\svp{As with any method for testing statistical graphics, there are a host of additional studies which would be useful to understand how users react to the You Draw It method and what parameters are most important for the researcher to control. One avenue of future exploration is to investigate the effect of axis limits on user anchoring. We know that the perceptual experience is heavily affected by anchoring to e.g. axis breaks, and we would expect that a similar anchoring effect might be present based on the limits of the plot and the amount of space in x and y provided for the user to draw.}
+
+XXX add references to the anchoring bit XXX
+
+# References
