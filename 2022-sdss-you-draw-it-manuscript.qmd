@@ -8,10 +8,10 @@ format:
   pdf:
     include-in-header:
       - edits.tex
-      - refs.tex
+      # - refs.tex
     keep-tex: true
-    # template: template-blinded.tex
     # template: template.tex
+documentclass: jds
 ---
 
 ```{r setup, include = FALSE}
@@ -28,6 +28,7 @@ theme_set(theme_bw())
 
 library(readxl)
 library(lubridate)
+library(patchwork)
 ```
 
 ```{r eyefitting-data, message=FALSE, warning=FALSE, echo = F}
@@ -47,6 +48,192 @@ eyefitting_gamm_preds <- read_csv("data/eyefitting-gamm-preds.csv") %>%
   dplyr::rename(`Parameter Choice` = parm_id)
 
 eyefitting_example_sim <- read.csv("data/eyefitting-simdata-example.csv")
+
+youdrawit_model_data      <- read_csv("data/youdrawit-model-data.csv")  %>%
+  mutate(`Points Truncated` = ifelse(points_truncated == 10, "50%", "75%"),
+         `Growth Rate` = ifelse(beta == "beta0.1", "Low", "High")) %>%
+  mutate(`Growth Rate` = factor(`Growth Rate`, levels = c("Low", "High"))) %>%
+  filter(`Points Truncated` == "50%", `Growth Rate` == "High")
+
+youdrawit_simulated_band <- youdrawit_model_data %>%
+  group_by(`Growth Rate`, `Points Truncated`, x) %>%
+  summarize(min_ynls = min(ynls),
+            max_ynls = max(ynls))
+```
+
+```{r eyefitting-simplot, eval = F, warning = F, message = F}
+#| fig-cap: "Example of simulated data points displayed in a scatter-plot illustrating the trends associated with the four selected parameter choices."
+#| out-width: \columnwidth
+#| label: fig-eyefitting-simplot
+#| fig-res: 300
+#| fig-width: 9
+#| fig-height: 9
+#| fig-env: figure
+          
+eyefitting_example_simplot <- eyefitting_example_sim %>%
+  filter(data == "point_data") %>%
+  filter(dataset %in% c("F", "N", "S") | (x < 16 & x > 4)) %>%
+  mutate(dataset = factor(dataset, levels = c("S", "F", "V", "N"))) %>%
+  filter(`Parameter Choice` == "F") %>%
+  dplyr::rename(`Parameter Choice` = dataset) %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 1) +
+  facet_wrap(~`Parameter Choice`, ncol = 2) +
+  theme_bw(base_size = 14) +
+  theme(aspect.ratio = 1,
+  legend.position = "none",
+  plot.title   = element_text(size = 12, hjust = 0),
+  axis.text    = element_text(size = 12),
+  axis.title   = element_text(size = 12),
+  legend.title = element_text(size = 12),
+  legend.text  = element_text(size = 12),
+  # strip.text = element_text(size = 5, margin = margin(0.05,0,0.05,0, "cm")),
+  # strip.background = element_rect(size = 0.5),
+  legend.key.size = unit(1, "line")
+) +
+  scale_y_continuous(breaks = seq(-10, 20, 5))
+# eyefitting_example_simplot
+```
+
+```{r eyefitting-trial-plot, warning = F, message = F}
+#| fig-cap: "Example of validation feedback data where three trend lines show the the OLS fitted, PCA fitted, and participant drawn values overlaid on the simulated data points."
+#| out-width: \columnwidth
+#| label: fig-eyefitting-trial-plot
+#| fig-res: 300
+#| fig-width: 4
+#| fig-height: 4
+#| fig-env: figure
+#| 
+
+eyefitting_example <- eyefitting_model_data %>%
+  # filter(participant_id == "65c10d498eae365e108efcd3dcb75287", parm_id == "N") %>%
+  filter(participant_id == "60b16b9bd5a122c1457d31055df51a45", `Parameter Choice` == "F") %>%
+  ggplot(aes(x = x)) +
+  geom_line(aes(y = yols, color = "OLS", linetype = "OLS")) +
+  geom_line(aes(y = ypca, color = "PCA", linetype = "PCA")) +
+  geom_line(aes(y = ydrawn, color = "Drawn", linetype = "Drawn")) +
+  geom_point(data = eyefitting_simulated_data %>%
+               filter(dataset == "point_data", participant_id == "60b16b9bd5a122c1457d31055df51a45", `Parameter Choice` == "F"),
+             aes(x = x, y = y)) +
+  facet_wrap(~`Parameter Choice`, labeller = labeller(`Parameter Choice` = label_both)) +
+  theme_bw(base_size = 14) +
+  theme(aspect.ratio = 1,
+        legend.position = "bottom",
+        plot.title   = element_text(size = 14, hjust = 0),
+        axis.text    = element_text(size = 12),
+        axis.title   = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        legend.text  = element_text(size = 12),
+        # strip.text = element_text(size = 8, margin = margin(0.1,0,0.1,0, "cm")),
+        # strip.background = element_rect(size = 0.8),
+        legend.key.size = unit(1, "line")
+        ) +
+  scale_x_continuous(limits = c(0,20)) +
+  scale_color_manual("", values = c("black", "steelblue", "orange")) +
+  scale_linetype_manual("", values = c("dashed", "solid", "solid")) +
+  scale_y_continuous("y")
+
+# eyefitting_example
+```
+
+```{r eyefitting-lmer-residualplots, warning = F, message = F}
+#| fig-cap: "Estimated trends of residuals (vertical deviation of participant drawn points from both the OLS (blue) and PCA (orange) fitted points) as fit by the linear mixed model. A random sample of 75 participants was selected to display the individual participant residuals behind the overall trend."
+#| out-width: \columnwidth
+#| label: fig-eyefitting-lmer-residualplots
+#| fig-res: 300
+#| fig-width: 9
+#| fig-height: 9
+#| fig-env: figure
+#| 
+
+set.seed(68505)
+participant_sample <- sample(unique(eyefitting_model_data$prolific_id), 75)
+
+# Plot Predictions
+eyefitting_lmer_plot <- eyefitting_lmer_preds %>%
+  filter((`Parameter Choice` %in% c("F", "N", "S") | (x <= 16 & x >= 4))) %>%
+  mutate(`Parameter Choice` = factor(`Parameter Choice`, levels = c("S", "F", "V", "N"))) %>%
+  filter(`Parameter Choice` == "F") %>%
+  ggplot(aes(x = x)) +
+  geom_line(data = eyefitting_model_data %>% 
+              filter(prolific_id %in% participant_sample)  %>% filter(`Parameter Choice` == "F"), 
+            aes(x = x, y = residual_ols_loess, group = plot_id, color = "OLS"), alpha = 0.1) +
+  geom_line(data = eyefitting_model_data %>% 
+              filter(prolific_id %in% participant_sample) %>% filter(`Parameter Choice` == "F"), 
+            aes(x = x, y = residual_pca_loess, group = plot_id, color = "PCA"), alpha = 0.1) +
+  geom_ribbon(aes(ymin = asymp.LCL.ols, ymax = asymp.UCL.ols, fill = "OLS"), color = NA, alpha = 0.4) +
+  geom_line(aes(y = emmean.ols, color = "OLS")) +
+  geom_ribbon(aes(ymin = asymp.LCL.pca, ymax = asymp.UCL.pca, fill = "PCA"), color = NA, alpha = 0.4) +
+  geom_line(aes(y = emmean.pca, color = "PCA")) +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
+  facet_wrap(~`Parameter Choice`, labeller = labeller(`Parameter Choice` = label_both), scales = "free") +
+  theme_bw(base_size = 14) +
+  theme(aspect.ratio = 1,
+        legend.position = "bottom",
+        plot.title   = element_text(size = 14, hjust = 0),
+        axis.text    = element_text(size = 12),
+        axis.title   = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        legend.text  = element_text(size = 12),
+        # strip.text = element_text(size = 5, margin = margin(0.05,0,0.05,0, "cm")),
+        # strip.background = element_rect(size = 0.5),
+        legend.key.size = unit(1, "line"), legend.box="vertical", legend.margin=margin()
+        ) +
+  scale_y_continuous("Residual", limits = c(-5,5), breaks = seq(-5,5,2.5)) +
+  scale_color_manual("Individual participant \nresiduals", values = c("steelblue", "orange"), labels = c("OLS", "PCA")) +
+  scale_fill_manual("LMER fitted trend", values = c("steelblue", "orange"), labels = c("OLS", "PCA"))  +
+  guides(color = guide_legend(override.aes = list(alpha = 1)),
+         fill = guide_legend(override.aes = list(alpha = 1)))
+
+# eyefitting_lmer_plot
+```
+
+```{r eyefitting-gamm-residualplots, warning = F, message = F}
+#| fig-cap: "Estimated trends of residuals (vertical deviation of participant drawn points from both the OLS (blue) and PCA (orange) fitted points) as fit by the generalized additive mixed model. A random sample of 75 participants was selected to display the individual participant residuals behind the overall trend."
+#| out-width: \columnwidth
+#| label: fig-eyefitting-gamm-residualplots
+#| fig-res: 300
+#| fig-width: 9
+#| fig-height: 9
+#| fig-env: figure
+#| 
+
+eyefitting_gamm_plot <- eyefitting_gamm_preds %>%
+  filter((`Parameter Choice` %in% c("F", "N", "S") | (x <= 16 & x >= 4))) %>%
+  mutate(`Parameter Choice` = factor(`Parameter Choice`, levels = c("S", "F", "V", "N"))) %>%
+  filter(`Parameter Choice` == "F") %>%
+  ggplot(aes(x = x)) +
+  geom_line(data = eyefitting_model_data %>% 
+              filter(prolific_id %in% participant_sample)  %>% filter(`Parameter Choice` == "F"), 
+            aes(x = x, y = residual_ols_loess, group = plot_id, color = "OLS"), alpha = 0.1) +
+  geom_line(data = eyefitting_model_data %>% 
+              filter(prolific_id %in% participant_sample)  %>% filter(`Parameter Choice` == "F"), 
+            aes(x = x, y = residual_pca_loess, group = plot_id, color = "PCA"), alpha = 0.1) +
+  geom_ribbon(aes(ymin = ols.lower, ymax = ols.upper, fill = "OLS"), color = NA, alpha = 0.4) +
+  geom_line(aes(y = ols.pred, color = "OLS")) +
+  geom_ribbon(aes(ymin = pca.lower, ymax = pca.upper, fill = "PCA"), color = NA, alpha = 0.4) +
+  geom_line(aes(y = pca.pred, color = "PCA")) +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
+  facet_wrap(~`Parameter Choice`, labeller = labeller(`Parameter Choice` = label_both), scales = "free") +
+  theme_bw(base_size = 14) +
+  theme(aspect.ratio = 1,
+        legend.position = "bottom",
+        plot.title   = element_text(size = 14, hjust = 0),
+        axis.text    = element_text(size = 12),
+        axis.title   = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        legend.text  = element_text(size = 12),
+        # strip.text = element_text(size = 5, margin = margin(0.05,0,0.05,0, "cm")),
+        # strip.background = element_rect(size = 0.5),
+        legend.key.size = unit(1, "line"), legend.box="vertical", legend.margin=margin()
+        ) +
+  scale_y_continuous("Residual", limits = c(-5,5), breaks = seq(-5,5,2.5)) +
+  scale_color_manual("Individual participant \nresiduals", values = c("steelblue", "orange"), labels = c("OLS", "PCA")) +
+  scale_fill_manual("GAMM fitted trend", values = c("steelblue", "orange"), labels = c("OLS", "PCA"))   +
+  guides(color = guide_legend(override.aes = list(alpha = 1)),
+         fill = guide_legend(override.aes = list(alpha = 1)))
+
+# eyefitting_gamm_plot
 ```
 
 # Introduction
@@ -185,11 +372,11 @@ Additionally, after some feedback by laptop users during pilot testing, we inclu
 We conducted a study in order to validate 'You Draw It' as a method for graphical testing, comparing results to the less technological method utilized in @mosteller1981eye.
 The original study asked 153 graduate students and postdoctoral researchers in an Introductory Biostatistics course to fit lines by eye to a set of four points (S, F, V, N), each set with differing slope and variance properties, using an 8.5 x 11 inch transparency with a straight line etched across the middle.
 Researchers conducted the study with a latin square experimental design to test for a practice effect on the task.
-Results indicated participants tended to fit the slope of the first principal component (minimizes orthogonal residuals) as opposed to the slope from the ordinary least squares regression (minimizes vertical residuals) [@fig-pca-plot] and found no effect of order.
+Results indicated participants tended to fit the slope of the first principal component (minimizes Euclidean distance) as opposed to the slope from the ordinary least squares regression (minimizes vertical distance) [@fig-pca-plot] and found no effect of order.
 
 ```{r ols-vs-pca-example, message = F, warning = F}
 #| fig-cap: "Comparison between an OLS regression equation which minimizes the vertical distance of points from the line and a regression equation with a slope calculated by the first principal component which minimizes the smallest distance of points from the line."
-#| out-width: \columnwidth
+#| out-width: "70%"
 #| label: fig-pca-plot
 #| fig-res: 300
 #| fig-width: 6
@@ -269,45 +456,12 @@ In our study, we replicated @mosteller1981eye using the 'You Draw It' method and
 y_i & = \beta_0 + \beta_1 x_i + e_i \\
 \text{with } e_i & \sim N(0, \sigma^2). \nonumber
 \end{align} 
-For each participant, a unique data set was randomly and independently generated from the underlying parameters at the beginning of the study and mapped to a scatter-plot graphic.
-@fig-eyefitting-simplot illustrates an example of simulated data for all four parameter choices intended to reflect the trends in the original study.
+For each participant, four unique data sets were randomly and independently generated from the underlying parameters at the beginning of the study and mapped to a scatter-plot graphic.
+<!-- @fig-eyefitting-simplot illustrates an example of simulated data for all four parameter choices intended to reflect the trends in the original study. -->
 When participants started the study, they were first asked to complete two practice plots - accompanied by instructions and a .gif demonstrating the task - in order to train them in the skills associated with executing the task.
 The four 'You Draw It' task plots associated with the selected parameters followed the practice plots in a random order for each individual.
 
-```{r eyefitting-simplot, warning = F, message = F}
-#| fig-cap: "Example of simulated data points displayed in a scatter-plot illustrating the trends associated with the four selected parameter choices."
-#| out-width: \columnwidth
-#| label: fig-eyefitting-simplot
-#| fig-res: 300
-#| fig-width: 9
-#| fig-height: 9
-#| fig-env: figure
-          
-eyefitting_example_simplot <- eyefitting_example_sim %>%
-  filter(data == "point_data") %>%
-  filter(dataset %in% c("F", "N", "S") | (x < 16 & x > 4)) %>%
-  mutate(dataset = factor(dataset, levels = c("S", "F", "V", "N"))) %>%
-  dplyr::rename(`Parameter Choice` = dataset) %>%
-  ggplot(aes(x = x, y = y)) +
-  geom_point(size = 1) +
-  facet_wrap(~`Parameter Choice`, ncol = 2) +
-  theme_bw(base_size = 14) +
-  theme(aspect.ratio = 1,
-  legend.position = "none",
-  plot.title   = element_text(size = 12, hjust = 0),
-  axis.text    = element_text(size = 12),
-  axis.title   = element_text(size = 12),
-  legend.title = element_text(size = 12),
-  legend.text  = element_text(size = 12),
-  # strip.text = element_text(size = 5, margin = margin(0.05,0,0.05,0, "cm")),
-  # strip.background = element_rect(size = 0.5),
-  legend.key.size = unit(1, "line")
-) +
-  scale_y_continuous(breaks = seq(-10, 20, 5))
-eyefitting_example_simplot
-```
-
-Participants were recruited via Prolific in March 2022; while this study does utilize a convenience sample, as this is primarily a perceptual task, previous results have found few differences between expert and non-expert participants in this context [CITE SPATIAL PAPER].
+Participants were recruited via Prolific in March 2022; while this study does utilize a convenience sample, as this is primarily a perceptual task, previous results have found few differences between expert and non-expert participants in this context \ear{(CITE SPATIAL PAPER)}.
 The study was conducted and distributed via a Shiny application and participants completed the tasks on their own computer, with a computer mouse, and in an environment of their choosing.
 The data from this study were collected to validate this method of graphical testing, with the hopes of providing a new tool to assess graphical perception interactively.
 
@@ -317,50 +471,25 @@ The data from this study were collected to validate this method of graphical tes
 
 As a part of the validation study, we collected data for each participant drawn trend line, allowing us to conduct formal analyses which compared the intuitive visually fit lines to statistical regression results - the original study lacked these formal comparisons, providing only summaries of averages, variances, and actual (least squares) values for the slope and intercept of each data set.
 The feedback data, stored in a SQLite database, contained the simulated data points} - $(x_{ijk}, y_{ijk})$ -, the predicted values from the statistical regression models - $\hat y_{ijk,OLS}$, and $\hat y_{ijk,PCA}$ -, and the predicted values from the user drawn line - $y_{ijk,drawn}$ for parameter choice $i = 1,2,3,4$, $j = 1,...N_\text{participant}$, and $x_{ijk}$ value $k = 1, ...,4 x_{max} + 1$.
-@fig-eyefitting-trial-plot displays an example of all three fitted trend lines for parameter choice F.
-
-```{r eyefitting-trial-plot, warning = F, message = F}
-#| fig-cap: "Example of validation feedback data where three trend lines show the the OLS fitted, PCA fitted, and participant drawn values overlaid on the simulated data points."
-#| out-width: \columnwidth
-#| label: fig-eyefitting-trial-plot
-#| fig-res: 300
-#| fig-width: 4
-#| fig-height: 4
-#| fig-env: figure
-#| 
-
-eyefitting_example <- eyefitting_model_data %>%
-  # filter(participant_id == "65c10d498eae365e108efcd3dcb75287", parm_id == "N") %>%
-  filter(participant_id == "60b16b9bd5a122c1457d31055df51a45", `Parameter Choice` == "F") %>%
-  ggplot(aes(x = x)) +
-  geom_line(aes(y = yols, color = "OLS", linetype = "OLS")) +
-  geom_line(aes(y = ypca, color = "PCA", linetype = "PCA")) +
-  geom_line(aes(y = ydrawn, color = "Drawn", linetype = "Drawn")) +
-  geom_point(data = eyefitting_simulated_data %>%
-               filter(dataset == "point_data", participant_id == "60b16b9bd5a122c1457d31055df51a45", `Parameter Choice` == "F"),
-             aes(x = x, y = y)) +
-  facet_wrap(~`Parameter Choice`, labeller = labeller(`Parameter Choice` = label_both)) +
-  theme_bw(base_size = 14) +
-  theme(aspect.ratio = 1,
-        legend.position = "bottom",
-        axis.text    = element_text(size = 12),
-        axis.title   = element_text(size = 12),
-        legend.title = element_text(size = 12),
-        legend.text  = element_text(size = 12),
-        # strip.text = element_text(size = 8, margin = margin(0.1,0,0.1,0, "cm")),
-        # strip.background = element_rect(size = 0.8),
-        legend.key.size = unit(1, "line")
-        ) +
-  scale_x_continuous(limits = c(0,20)) +
-  scale_color_manual("", values = c("black", "steelblue", "orange")) +
-  scale_linetype_manual("", values = c("dashed", "solid", "solid")) +
-  scale_y_continuous("y")
-
-eyefitting_example
-```
+@fig-eyefitting-plots displays an example of all three fitted trend lines for parameter choice F.
 
 A unique data set was simulated independently for each participant, therefore, comparisons of vertical residuals between the user drawn line and the OLS fitted values ($e_{ijk,OLS} = y_{ijk,drawn} - \hat y_{ijk,OLS}$) and PCA fitted values ($e_{ijk,PCA} = y_{ijk,drawn} - \hat y_{ijk,PCA}$) were used to assess the accuracy of participant drawn lines.
 We use mixed model methods to analyze residual trends and capture the variability due to participant differences.
+
+```{r eyefitting-plots, warning = F, message = F}
+#| fig-cap: "Visual analysis results for parameter choice set F. \\linebreak \\textbf{A.} Example of validation feedback data where three trend lines show the the OLS fitted, PCA fitted, and participant drawn values overlaid on the simulated data points. \\linebreak \\textbf{B \\& C.} Estimated trends of residuals (vertical deviation of participant drawn points from both the OLS (blue) and PCA (orange) fitted points) as fit by the (B) linear mixed model and (C) generalized additive mixed model. A random sample of 75 participants was selected to display the individual participant residuals behind the overall trend."
+#| out-width: \columnwidth
+#| label: fig-eyefitting-plots
+#| fig-res: 300
+#| fig-width: 12
+#| fig-height: 6
+#| fig-env: figure
+
+(eyefitting_example + ggtitle("A. Example")) + 
+  (eyefitting_lmer_plot + ggtitle("B. LMER Results")) + 
+  (eyefitting_gamm_plot + ggtitle("C. GAMM Results")) +
+  plot_layout(ncol =  3)
+```
 
 We first fit a linear mixed model (LMM) to the OLS and PCA residuals separately using the `lmer` function in the `lme4` package [@lme4-pkg], constraining the fit to a linear trend.
 Parameter choice, $x$, and the interaction between $x$ and parameter choice were treated as fixed effects with a random participant effect accounting for variation due to participant.
@@ -381,57 +510,6 @@ y_{ijk,drawn} - \hat y_{ijk,fit} = e_{ijk,fit} = \left[\gamma_0 + \alpha_i\right
 + $p_{j} \sim N(0, \sigma^2_\text{participant})$ is the random error due to the $j^{th}$ participant's characteristics
 + $\epsilon_{ijk} \sim N(0, \sigma^2)$ is the residual error.
 
-```{r eyefitting-lmer-residualplots, warning = F, message = F}
-#| fig-cap: "Estimated trends of residuals (vertical deviation of participant drawn points from both the OLS (blue) and PCA (orange) fitted points) as fit by the linear mixed model. A random sample of 75 participants was selected to display the individual participant residuals behind the overall trend."
-#| out-width: \columnwidth
-#| label: fig-eyefitting-lmer-residualplots
-#| fig-res: 300
-#| fig-width: 9
-#| fig-height: 9
-#| fig-env: figure
-#| 
-
-set.seed(68505)
-participant_sample <- sample(unique(eyefitting_model_data$prolific_id), 75)
-
-# Plot Predictions
-eyefitting_lmer_plot <- eyefitting_lmer_preds %>%
-  filter((`Parameter Choice` %in% c("F", "N", "S") | (x <= 16 & x >= 4))) %>%
-  mutate(`Parameter Choice` = factor(`Parameter Choice`, levels = c("S", "F", "V", "N"))) %>%
-  ggplot(aes(x = x)) +
-  geom_line(data = eyefitting_model_data %>% 
-              filter(prolific_id %in% participant_sample), 
-            aes(x = x, y = residual_ols_loess, group = plot_id, color = "OLS"), alpha = 0.1) +
-  geom_line(data = eyefitting_model_data %>% 
-              filter(prolific_id %in% participant_sample), 
-            aes(x = x, y = residual_pca_loess, group = plot_id, color = "PCA"), alpha = 0.1) +
-  geom_ribbon(aes(ymin = asymp.LCL.ols, ymax = asymp.UCL.ols, fill = "OLS"), color = NA, alpha = 0.4) +
-  geom_line(aes(y = emmean.ols, color = "OLS")) +
-  geom_ribbon(aes(ymin = asymp.LCL.pca, ymax = asymp.UCL.pca, fill = "PCA"), color = NA, alpha = 0.4) +
-  geom_line(aes(y = emmean.pca, color = "PCA")) +
-  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
-  facet_wrap(~`Parameter Choice`, labeller = labeller(`Parameter Choice` = label_both), scales = "free") +
-  theme_bw(base_size = 14) +
-  theme(aspect.ratio = 1,
-        legend.position = "right",
-        plot.title   = element_text(size = 12, hjust = 0),
-        axis.text    = element_text(size = 12),
-        axis.title   = element_text(size = 12),
-        legend.title = element_text(size = 12),
-        legend.text  = element_text(size = 12),
-        # strip.text = element_text(size = 5, margin = margin(0.05,0,0.05,0, "cm")),
-        # strip.background = element_rect(size = 0.5),
-        legend.key.size = unit(1, "line")
-        ) +
-  scale_y_continuous("Residual", limits = c(-5,5), breaks = seq(-5,5,2.5)) +
-  scale_color_manual("Individual participant \nresiduals", values = c("steelblue", "orange"), labels = c("OLS", "PCA")) +
-  scale_fill_manual("LMER fitted trend", values = c("steelblue", "orange"), labels = c("OLS", "PCA"))  +
-  guides(color = guide_legend(override.aes = list(alpha = 1)),
-         fill = guide_legend(override.aes = list(alpha = 1)))
-
-eyefitting_lmer_plot
-```
-
 Eliminating the linear trend constraint, we can extend the method and analysis beyond ordinary least squares by using generalized additive mixed models (GAMM) to estimate smoothing splines and allow for a more flexible residual trend. 
 The `bam` function in the `mgcv` package was used to fit a GAMM separately to the OLS and PCA.
 Parameter choice was treated as a fixed effect with no estimated intercept and a separate smoothing spline for $x$ was estimated for each parameter choice. 
@@ -451,64 +529,42 @@ y_{ijk, drawn} - \hat y_{ijk, fit} = e_{ijk,fit} = \alpha_i + s_{i}(x_{ijk}) + p
 + $p_{j} \sim N(0, \sigma^2_\text{participant})$ is the error due to participant variation
 + $s_{j}$ is the random smoothing spline for each participant.
 
-```{r eyefitting-gamm-residualplots, warning = F, message = F}
-#| fig-cap: "Estimated trends of residuals (vertical deviation of participant drawn points from both the OLS (blue) and PCA (orange) fitted points) as fit by the generalized additive mixed model. A random sample of 75 participants was selected to display the individual participant residuals behind the overall trend."
-#| out-width: \columnwidth
-#| label: fig-eyefitting-gamm-residualplots
-#| fig-res: 300
-#| fig-width: 9
-#| fig-height: 9
-#| fig-env: figure
-#| 
-
-eyefitting_gamm_plot <- eyefitting_gamm_preds %>%
-  filter((`Parameter Choice` %in% c("F", "N", "S") | (x <= 16 & x >= 4))) %>%
-  mutate(`Parameter Choice` = factor(`Parameter Choice`, levels = c("S", "F", "V", "N"))) %>%
-  ggplot(aes(x = x)) +
-  geom_line(data = eyefitting_model_data %>% 
-              filter(prolific_id %in% participant_sample), 
-            aes(x = x, y = residual_ols_loess, group = plot_id, color = "OLS"), alpha = 0.1) +
-  geom_line(data = eyefitting_model_data %>% 
-              filter(prolific_id %in% participant_sample), 
-            aes(x = x, y = residual_pca_loess, group = plot_id, color = "PCA"), alpha = 0.1) +
-  geom_ribbon(aes(ymin = ols.lower, ymax = ols.upper, fill = "OLS"), color = NA, alpha = 0.4) +
-  geom_line(aes(y = ols.pred, color = "OLS")) +
-  geom_ribbon(aes(ymin = pca.lower, ymax = pca.upper, fill = "PCA"), color = NA, alpha = 0.4) +
-  geom_line(aes(y = pca.pred, color = "PCA")) +
-  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
-  facet_wrap(~`Parameter Choice`, labeller = labeller(`Parameter Choice` = label_both), scales = "free") +
-  theme_bw(base_size = 14) +
-  theme(aspect.ratio = 1,
-        legend.position = "right",
-        plot.title   = element_text(size = 12, hjust = 0),
-        axis.text    = element_text(size = 12),
-        axis.title   = element_text(size = 12),
-        legend.title = element_text(size = 12),
-        legend.text  = element_text(size = 12),
-        # strip.text = element_text(size = 5, margin = margin(0.05,0,0.05,0, "cm")),
-        # strip.background = element_rect(size = 0.5),
-        legend.key.size = unit(1, "line")
-        ) +
-  scale_y_continuous("Residual", limits = c(-5,5), breaks = seq(-5,5,2.5)) +
-  scale_color_manual("Individual participant \nresiduals", values = c("steelblue", "orange"), labels = c("OLS", "PCA")) +
-  scale_fill_manual("GAMM fitted trend", values = c("steelblue", "orange"), labels = c("OLS", "PCA"))   +
-  guides(color = guide_legend(override.aes = list(alpha = 1)),
-         fill = guide_legend(override.aes = list(alpha = 1)))
-
-eyefitting_gamm_plot
-```
-
-@fig-eyefitting-lmer-residualplots and @fig-eyefitting-gamm-residualplots show a visual analysis of the estimated trends of residuals (vertical deviation of participant drawn points from both the OLS and PCA fitted points) as modeled by a LMM and GAMM respectively. 
+While the statistical models were fit to all four parameter choices, @fig-eyefitting-plots displays the estimated trends of residuals (vertical deviation of participant drawn points from both the OLS and PCA fitted points) as modeled by a LMM and GAMM respectively for parameter choice set F. 
 A random sample of 75 participants was selected to display individual participant residuals behind the overall residual trend.
 Examining the plots, the estimated trends of PCA residuals (orange) appear to align more parallel and closer to the $y=0$ horizontal (dashed) line than the OLS residuals (blue). 
-In particular, this trend is more prominent in parameter choices with large variances (F and N).
+In particular, this trend was more prominent in parameter choices with large variances.
 Results from our study were consistent with those found in the original study; when shown points following a linear trend, participants tended to fit the slope of the first principal component Our study established 'You Draw It' as a method for graphical testing and reinforced the differences between intuitive visual model fitting and statistical model fitting, providing information about human perception as it relates to the use of statistical graphics.
 
 ## Extension to Nonlinear Data
 
-After validating the 'You Draw It' method, we conducted a study utilizing the new method to evaluate participants ability to make forecasts for exponentially increasing data on log and linear scales. Along with analyzing the feedback data with the GAMM method for flexibility due to nonlinear data, we used spaghetti plots to conduct a visual analysis of participant forecasts compared to the nonlinear least squares statistical model and make comparisons between two chart design features [@fig-exponential-yloess-spaghetti-plot-2-1]. This study demonstrated the advantage of using the 'You Draw It' method paired with GAMM and visual analysis methods for measuring perception and visual patterns of nonlinear data.
+After validating the 'You Draw It' method, we conducted a study utilizing the new method to evaluate participants ability to make forecasts for exponentially increasing data on log and linear scales. Along with analyzing the feedback data with the GAMM method for flexibility due to nonlinear data, we used spaghetti plots to conduct a visual analysis of participant forecasts compared to the nonlinear least squares statistical model and make comparisons between two chart design features [@fig-exponential-spaghetti-plot]. This study demonstrated the advantage of using the 'You Draw It' method paired with GAMM and visual analysis methods for measuring perception and visual patterns of nonlinear data.
 
-![Spaghetti plot of results from a study which asked participants to forcast trends of exponentially increasing data. Participants drawn lines on the linear scale are shown in blue and the log scale are shown in orange. Variability in the statistically fitted regression lines occured due to a unique data set being simulated for each individual; the gray band shows the range fitted values from the statistically fitted regression lines.](images/exponential-yloess-spaghetti-plot-2-1.png){#fig-exponential-yloess-spaghetti-plot-2-1}
+```{r eyefitting-plots, warning = F, message = F}
+#| fig-cap: "Spaghetti plot of results from a study which asked participants to forecast trends of exponentially increasing data. Participants drawn lines on the linear scale are shown in blue and the log scale are shown in orange. Variability in the statistically fitted regression lines occurred due to a unique data set being simulated for each individual; the gray band shows the range fitted values from the statistically fitted regression lines."
+#| out-width: \columnwidth
+#| label: fig-exponential-spaghetti-plot
+#| fig-res: 300
+#| fig-width: 6
+#| fig-height: 4
+#| fig-env: figure
+
+spaghetti_plot <- youdrawit_model_data %>%
+  ggplot(aes(x = x)) +
+  geom_line(aes(y = yloess, group = plot_id, color = scale), alpha = 0.2) +
+  geom_ribbon(data = youdrawit_simulated_band, aes(ymin = min_ynls, ymax = max_ynls, fill = "Fitted NLS", group = NA), color = NA, alpha = 0.35) +
+  # facet_grid(`Growth Rate` ~ `Points Truncated`, scales = "free", labeller = labeller(`Growth Rate` = label_both, `Points Truncated` = label_both)) +
+  theme_bw() +
+  theme(aspect.ratio = 1,
+        legend.position = "right"
+        ) +
+  scale_color_manual("", values = c("steelblue", "orange"), labels = c("Visual fit, linear scale \n (drawn, loess)", "Visual fit, log scale \n (drawn, loess)")) +
+  scale_fill_manual("", values = c("black"), labels = c("Range of fitted values \n from statistically fitted regression \n lines (NLS)")) +
+  scale_x_continuous(limits = c(10, 20)) +
+  scale_y_continuous("y", limits = c(0, 300), breaks = seq(0,300,50)) +
+  guides(color = guide_legend(override.aes = list(alpha = 1)),
+         fill = guide_legend(override.aes = list(alpha = 0.3)))
+spaghetti_plot
+```
 
 <!-- \svp{It's also worth remarking on the effectiveness of the spaghetti plots and GAMM plots for visual analysis of the results. Gotta keep pounding the "visual analytics is statistics" drum a bit :). } -->
 
