@@ -14,6 +14,22 @@ format:
 documentclass: jds
 ---
 
+<!-- Article Types -->
+<!-- https://jds-online.org/journal/JDS/information/Article%20Types -->
+
+<!-- Statistical Data Science -->
+
+<!-- This section is the home base of the reformed journal covering statistical methods that are motivated by real-world applications. It is not for papers with technical proofs that push the frontiers of theoretical developments. In addition to classic topics in Statistics, cutting-edge works on big data, visualization, machine learning, and artificial intelligence are also welcome. -->
+
+<!-- Computing in Data Science -->
+
+<!-- Computing is an indispensable component of all data science and big data applications. As more journals on data science and big data emerge, it is of great interest for the data science community to have a highly regarded outlet with a specialization in computing, covering a wide spectrum from methods, algorithms, software implementations, to case studies. Existing journals on statistical computing have their own traditions and may not meet the increasing demands. Some research works on cutting-edge problems may not fit well in any existing journal. -->
+
+<!-- This section covers the following types of articles. -->
+<!-- 1. Software: Articles here are similar to those in the Journal of Statistical Software. They are not referencing manuals but vignettes that introduce the methods being implemented as well as the usage of the software with reproducible code chunks. The software implementation can be in any computer language with a sufficiently large user base. -->
+<!-- 2. Algorithms: Articles here focus on the performance side of the computing needs arising from domain applications. For example, one can propose algorithms that make infeasible tasks feasible or speed up existing algorithms. -->
+<!-- 3. Methods: Articles here are similar to those in Journal of Computational and Graphic Statistics or Statistics and Computing. The computing methods need to be motivated by a domain application with the properties carefully studied. -->
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = F, 
                       eval = T, 
