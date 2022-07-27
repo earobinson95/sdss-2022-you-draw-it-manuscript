@@ -96,10 +96,11 @@
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
-\usepackage[dvipsnames]{xcolor} % colors
-\newcommand{\ear}[1]{{\textcolor{blue}{#1}}}
-\newcommand{\svp}[1]{{\textcolor{RedOrange}{#1}}}
-\newcommand{\rh}[1]{{\textcolor{Green}{#1}}}
+\author[1]{Emily A. Robinson\thanks{Corresponding author. Email: erobin17@calpoly.edu}}
+\author[2]{Reka Howard\footnote{Email: rekahoward@unl.edu}}
+\author[2]{Susan VanderPlas\footnote{Email: susan.vanderplas@unl.edu}}
+\affil[1]{Department of Statistics, CalPoly-San Luis Obispo}
+\affil[2]{Department of Statistics, University of Nebraska-Lincoln}
 \makeatletter
 \makeatother
 \makeatletter
@@ -169,7 +170,7 @@
 
 \title{`You Draw It': Implementation of visually fitted trends with
 \texttt{r2d3}}
-\author{}
+% \author{}
 \date{}
 
 \begin{document}
@@ -184,9 +185,14 @@ New York Times introduced an interactive feature, called `You Draw It,'
 where readers are asked to input their own assumptions about various
 metrics and compare how these assumptions relate to reality. This
 research is intended to implement `You Draw It', adapted from the New
-York Times, as a way to measure the patterns we see in data.
+York Times, as a way to measure the patterns we see in data. In this
+paper, we describe the adaptation of an old tool for graphical testing
+and evaluation, eye-fitting, for use in modern web-applications suitable
+for testing statistical graphics. We present an empirical evaluation of
+this testing method for linear regression, and briefly discuss an
+extension of this method to non-linear applications.
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, breakable, frame hidden, borderline west={3pt}{0pt}{shadecolor}, enhanced, boxrule=0pt, sharp corners]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[frame hidden, interior hidden, breakable, enhanced, sharp corners, borderline west={3pt}{0pt}{shadecolor}, boxrule=0pt]}{\end{tcolorbox}}\fi
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -279,7 +285,7 @@ interactive graphics in R (R Core Team 2022). We then share results from
 our study which validates `You Draw It' as a method for graphical
 testing on linear trends and apply an appropriate data analysis method
 to the participant data. We also briefly demonstrate the use of the `You
-Draw It' method and analysis on nonlinear data.
+Draw It' method and analysis on non-linear data.
 
 \hypertarget{development}{%
 \section{Development}\label{development}}
@@ -686,18 +692,18 @@ differences between intuitive visual model fitting and statistical model
 fitting, providing information about human perception as it relates to
 the use of statistical graphics.
 
-\hypertarget{extension-to-nonlinear-data}{%
-\subsection{Extension to Nonlinear
-Data}\label{extension-to-nonlinear-data}}
+\hypertarget{extension-to-non-linear-data}{%
+\subsection{Extension to Non-linear
+Data}\label{extension-to-non-linear-data}}
 
 The analysis method presented above extends nicely beyond the linear
 regressions tested in Mosteller et al. (1981). Here we briefly
 demonstrate this with an example from a study examining participants
 ability to make forecasts for exponentially increasing data on log and
 linear scales. Along with analyzing the feedback data with the GAMM
-method for flexibility due to nonlinear data, we used spaghetti plots to
-conduct a visual analysis of participant forecasts compared to the
-nonlinear least squares statistical model and make comparisons between
+method for flexibility due to non-linear data, we used spaghetti plots
+to conduct a visual analysis of participant forecasts compared to the
+non-linear least squares statistical model and make comparisons between
 two chart design features Figure~\ref{fig-exponential-spaghetti-plot}.
 The combination of the GAMM analysis and visual display demonstrates the
 strength of the `You Draw It' method for testing statistical graphics.
@@ -763,26 +769,26 @@ and \(y\) provided for the user to draw.
   be accessed at
   \href{https://github.com/earobinson95/presentations/blob/master/can-you-draw-it/www/you-draw-it.js}{github.com/earobinson95/presentations/blob/master/can-you-draw-it/www/you-draw-it.js}.
 \item
-  \textbf{Study Applet:} The shiny app used to conduct the study can be
-  accessed at
+  \textbf{Study Applet:} The RShiny applet used to conduct the linear
+  and non-linear studies can be accessed at
   \href{https://shiny.srvanderplas.com/perception-of-statistical-graphics/}{shiny.srvanderplas.com/perception-of-statistical-graphics/}.
 \item
-  \textbf{Study Applet Code:} The code used to create the RShiny Applet
+  \textbf{Study Applet Code:} The code used to create the RShiny applet
   for data collection can be found at
   \href{https://github.com/earobinson95/log-perception-prolific/tree/main/perception-of-statistical-graphics}{github.com/earobinson95/log-perception-prolific/tree/main/perception-of-statistical-graphics}.
 \item
   \textbf{Participant Data (Linear):} De-identified participant data
-  collected in the study and used for analyses are available to be
-  downloaded from GitHub at
+  collected in the linear study and used for analyses are available to
+  be downloaded from GitHub at
   \href{https://github.com/earobinson95/sdss-2022-you-draw-it-manuscript/raw/master/data/eyefitting-model-data.csv}{github.com/earobinson95/sdss-2022-you-draw-it-manuscript/raw/master/data/eyefitting-model-data.csv}.
 \item
-  \textbf{Participant Data (Nonlinear):} De-identified participant data
-  collected in the study and used for analyses are available to be
-  downloaded from GitHub at
+  \textbf{Participant Data (Non-linear):} De-identified participant data
+  collected in the non-linear study and used for analyses are available
+  to be downloaded from GitHub at
   \href{https://github.com/earobinson95/sdss-2022-you-draw-it-manuscript/raw/master/data/youdrawit-model-data.csv}{github.com/earobinson95/sdss-2022-you-draw-it-manuscript/raw/master/data/youdrawit-model-data.csv}.
 \item
-  \textbf{Data Analysis Code:} The code used to replicate the nonlinear
-  study analysis in this paper can be found at
+  \textbf{Data Analysis Code:} The code used to replicate the linear and
+  non-linear study analysis in this paper can be found at
   \href{https://earobinson95.github.io/sdss-2022-you-draw-it-manuscript/analysis/data-analysis.html}{earobinson95.github.io/sdss-2022-you-draw-it-manuscript/analysis/data-analysis.htmll}.
 \end{itemize}
 
