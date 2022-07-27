@@ -1,0 +1,446 @@
+---
+title: "Analysis"
+subtitle: "'You Draw It': Implementation of visually fitted trends with `r2d3`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE,
+	cache = TRUE
+)
+library(tidyverse)
+library(digest)
+library(pls)
+library(mcr)
+
+library(lme4)
+library(emmeans)
+
+library(openssl)
+library(mgcv)
+library(lme4)
+library(tictoc)
+```
+
+# Linear Study
+
+Read in data for linear study.
+
+```{r}
+# read in eyefitting_model_data and eyefitting_simulated_data
+eyefitting_model_data     <- read_csv("https://github.com/earobinson95/sdss-2022-you-draw-it-manuscript/raw/master/data/eyefitting-model-data.csv")
+eyefitting_simulated_data <- read_csv("https://github.com/earobinson95/sdss-2022-you-draw-it-manuscript/raw/master/data/eyefitting-simulated-data.csv")
+```
+
+There are `r length(unique(eyefitting_model_data$prolific_id)) %>% as.numeric` participants and `r length(unique(eyefitting_model_data$plot_id)) %>% as.numeric()` 'You Draw It' Eyefitting task plots complete.
+
+```{r}
+eyefitting_model_data %>%
+  select(participant_id, parm_id, x, yols, ypca, ydrawn, yloess, residual_ols_drawn, residual_pca_drawn) %>%
+  head() %>%
+  knitr::kable(digits = 3, caption = "Eyefitting Model Data (head)")
+```
+
+## Example
+
+Look at example from linear data.
+
+```{r}
+# example
+eyefitting_example <- eyefitting_model_data %>%
+  # filter(participant_id == "65c10d498eae365e108efcd3dcb75287", parm_id == "N") %>%
+  filter(participant_id == "60b16b9bd5a122c1457d31055df51a45", parm_id == "F") %>%
+  ggplot(aes(x = x)) +
+  geom_line(aes(y = yols, color = "OLS", linetype = "OLS")) +
+  geom_line(aes(y = ypca, color = "PCA", linetype = "PCA")) +
+  geom_line(aes(y = ydrawn, color = "Drawn", linetype = "Drawn")) +
+  geom_point(data = eyefitting_simulated_data %>%
+               filter(dataset == "point_data", participant_id == "60b16b9bd5a122c1457d31055df51a45", parm_id == "F"),
+             aes(x = x, y = y)) +
+  facet_wrap(~parm_id, labeller = labeller(parm_id = label_both)) +
+  theme_bw(base_size = 14) +
+  theme(aspect.ratio = 1,
+        legend.position = "bottom",
+        plot.title   = element_text(size = 14, hjust = 0),
+        axis.text    = element_text(size = 12),
+        axis.title   = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        legend.text  = element_text(size = 12),
+        # strip.text = element_text(size = 8, margin = margin(0.1,0,0.1,0, "cm")),
+        # strip.background = element_rect(size = 0.8),
+        legend.key.size = unit(1, "line")
+        ) +
+  scale_x_continuous(limits = c(0,20)) +
+  scale_color_manual("", values = c("black", "steelblue", "orange")) +
+  scale_linetype_manual("", values = c("dashed", "solid", "solid")) +
+  scale_y_continuous("y")
+eyefitting_example
+```
+
+# Linear Constraint (LMER)
+
+Run lmer model on linear data and obtain predictions.
+
+```{r}
+# OLS
+# tic()
+eyefitting.ols.lmer <- lmer(residual_ols_drawn ~ -1 + parm_id + x:parm_id + (1|participant_id),
+                            data = eyefitting_model_data %>%
+                             mutate(parm_id = factor(parm_id),
+                                    participant_id = factor(participant_id)))
+# toc()
+# summary(eyefitting.ols.lmer)
+# anova(eyefitting.ols.lmer)
+
+# pca
+# tic()
+eyefitting.pca.lmer <- lmer(residual_pca_drawn ~ -1 + parm_id + x:parm_id + (1|participant_id),
+                            data = eyefitting_model_data %>%
+                             mutate(parm_id = factor(parm_id),
+                                    participant_id = factor(participant_id)))
+# toc()
+# summary(eyefitting.pca.lmer)
+# anova(eyefitting.pca.lmer)
+
+# Obtain Predictions
+eyefitting.ols.grid.lmer  <- ref_grid(eyefitting.ols.lmer, at = list(x = seq(1,20,0.5)))
+eyefitting.ols.preds.lmer <- emmeans(eyefitting.ols.grid.lmer, ~ parm_id:x) %>%
+  as_tibble()
+
+eyefitting.pca.grid.lmer  <- ref_grid(eyefitting.pca.lmer, at = list(x = seq(1,20,0.5)))
+eyefitting.pca.preds.lmer <- emmeans(eyefitting.pca.grid.lmer, ~ parm_id:x) %>%
+  as_tibble()
+
+eyefitting_lmer_preds <- eyefitting.ols.preds.lmer %>%
+  full_join(eyefitting.pca.preds.lmer, by = c("x", "parm_id"), suffix = c(".ols", ".pca"))
+
+# write.csv(eyefitting.preds.lmer, file = here("analyses/02b-eyefitting/data/eyefitting-lmer-preds.csv"), row.names = F, na = "")
+```
+
+Create plot for lmer model for linear data.
+
+```{r}
+set.seed(68505)
+participant_sample <- sample(unique(eyefitting_model_data$prolific_id), 75)
+
+# Plot Predictions
+eyefitting_lmer_plot <- eyefitting_lmer_preds %>%
+  filter((parm_id %in% c("F", "N", "S") | (x <= 16 & x >= 4))) %>%
+  mutate(parm_id = factor(parm_id, levels = c("S", "F", "V", "N"))) %>%
+  filter(parm_id == "F") %>%
+  ggplot(aes(x = x)) +
+  geom_line(data = eyefitting_model_data %>% 
+              filter(prolific_id %in% participant_sample)  %>% filter(parm_id == "F"), 
+            aes(x = x, y = residual_ols_loess, group = plot_id, color = "OLS"), alpha = 0.1) +
+  geom_line(data = eyefitting_model_data %>% 
+              filter(prolific_id %in% participant_sample) %>% filter(parm_id == "F"), 
+            aes(x = x, y = residual_pca_loess, group = plot_id, color = "PCA"), alpha = 0.1) +
+  geom_ribbon(aes(ymin = asymp.LCL.ols, ymax = asymp.UCL.ols, fill = "OLS"), color = NA, alpha = 0.4) +
+  geom_line(aes(y = emmean.ols, color = "OLS")) +
+  geom_ribbon(aes(ymin = asymp.LCL.pca, ymax = asymp.UCL.pca, fill = "PCA"), color = NA, alpha = 0.4) +
+  geom_line(aes(y = emmean.pca, color = "PCA")) +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
+  facet_wrap(~parm_id, labeller = labeller(parm_id = label_both), scales = "free") +
+  theme_bw(base_size = 14) +
+  theme(aspect.ratio = 1,
+        legend.position = "bottom",
+        plot.title   = element_text(size = 14, hjust = 0),
+        axis.text    = element_text(size = 12),
+        axis.title   = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        legend.text  = element_text(size = 12),
+        # strip.text = element_text(size = 5, margin = margin(0.05,0,0.05,0, "cm")),
+        # strip.background = element_rect(size = 0.5),
+        legend.key.size = unit(1, "line"), legend.box="vertical", legend.margin=margin()
+        ) +
+  scale_y_continuous("Residual", limits = c(-5,5), breaks = seq(-5,5,2.5)) +
+  scale_color_manual("Individual participant \nresiduals", values = c("steelblue", "orange"), labels = c("OLS", "PCA")) +
+  scale_fill_manual("LMER fitted trend", values = c("steelblue", "orange"), labels = c("OLS", "PCA"))  +
+  guides(color = guide_legend(override.aes = list(alpha = 1)),
+         fill = guide_legend(override.aes = list(alpha = 1)))
+
+eyefitting_lmer_plot
+```
+
+# Smoothing Splines (GAMM)
+
+Run gamm model on linear data.
+
+```{r}
+# OLS
+# tic()
+eyefitting.ols.gamm <- bam(residual_ols_drawn ~ -1 + parm_id + 
+                             s(x, by = parm_id) +
+                             s(participant_id, bs = "re") +
+                             s(x,participant_id, bs = "re"),
+                           method = "REML",
+                           data = eyefitting_model_data %>%
+                             mutate(parm_id = factor(parm_id),
+                                    participant_id = factor(participant_id)))
+# toc()
+# summary(eyefitting.ols.gamm)
+# anova(eyefitting.ols.gamm)
+
+# pca
+# tic()
+eyefitting.pca.gamm <- bam(residual_pca_drawn ~ -1 + parm_id + 
+                             s(x, by = parm_id) +
+                             s(participant_id, bs = "re") +
+                             s(x,participant_id, bs = "re"),
+                           method = "REML",
+                           data = eyefitting_model_data %>%
+                             mutate(parm_id = factor(parm_id),
+                                    participant_id = factor(participant_id)))
+# toc()
+# summary(eyefitting.pca.gamm)
+# anova(eyefitting.pca.gamm)
+```
+
+Prediction function for GAMM model.
+
+```{r}
+#' library(lme4)
+#' library(mgcv)
+#' lmer_model <- lmer(Reaction ~ Days + (Days || Subject), data = sleepstudy)
+#' ga_model <- gam(Reaction ~ Days + s(Subject, bs = "re") + s(Days, Subject, bs = "re"),
+#'   data = sleepstudy,
+#'   method = "REML"
+#' )
+#'
+#' head(
+#'   data.frame(
+#'     lmer = predict(lmer_model),
+#'     gam = predict_gamm(ga_model)
+#'   )
+#' )
+#'
+#' head(
+#'   cbind(
+#'     lmer = predict(lmer_model, re.form = NA),
+#'     gam1 = predict_gamm(ga_model, re_form = NA),
+#'     gam2 = predict_gamm(ga_model,
+#'       exclude = c("s(Subject)", "s(Days,Subject)")
+#'     )
+#'   )
+#' )
+#'
+#' head(predict_gamm(ga_model, se = TRUE))
+#' @export
+predict_gamm <- function(
+  model,
+  newdata,
+  re_form = NULL,
+  se = FALSE,
+  include = NULL,
+  exclude = NULL,
+  keep_prediction_data = FALSE,
+  ...) {
+  
+  # Note because predict doesn't use NULL, can't use NULL for new_data arg or
+  # even a differently named arg, and I'm not going into the weeds of rlang to
+  # find a hack.
+  
+  # basic checks
+  if (!inherits(model, "gam")) stop("Need a gam object.")
+  
+  if (!rlang::is_null(include) && !rlang::is_character(include)) {
+    stop("include must be NULL or character.")
+  }
+  
+  if (!rlang::is_null(exclude) && !rlang::is_character(exclude)) {
+    stop("exclude must be NULL or character.")
+  }
+  
+  if (!rlang::is_null(re_form) &&
+      !rlang::is_na(re_form) &
+      !rlang::is_character(re_form)) {
+    stop("re_form must be NULL, NA, or character.")
+  }
+  
+  if (any(include %in% exclude)) {
+    stop("You can't include and exclude the same thing.")
+  }
+  
+  if (!rlang::is_logical(se)) {
+    stop("se must be TRUE or FALSE")
+  }
+  
+  if (!rlang::is_logical(keep_prediction_data)) {
+    stop("keep_prediction_data must be TRUE or FALSE")
+  }
+  
+  # standard prediction would simply call predict.gam
+  if (rlang::is_null(re_form) | rlang::is_character(re_form)) {
+    if (rlang::is_null(re_form)) {
+      preds <- predict(model,
+                       newdata,
+                       se = se,
+                       terms = include,
+                       exclude = exclude,
+                       ...
+      )
+    } else {
+      preds <- predict(model,
+                       newdata,
+                       se = se,
+                       terms = c(include, re_form),
+                       exclude = exclude,
+                       ...
+      )
+    }
+  } else if (rlang::is_na(re_form)) {
+    
+    # FE only
+    re_terms <- sapply(model$smooth, function(x) inherits(x, "random.effect"))
+    re_terms <- sapply(model$smooth[re_terms], function(x) x$label)
+    
+    preds <- predict(model,
+                     newdata,
+                     se = se,
+                     terms = include,
+                     exclude = c(re_terms, exclude),
+                     ...
+    )
+  }
+  
+  if (se) {
+    preds <- data.frame(prediction = preds$fit, se = preds$se)
+  } else {
+    preds <- data.frame(prediction = preds)
+  }
+  
+  if (keep_prediction_data) {
+    if (missing(newdata)) {
+      base <- model$model
+    } else {
+      base <- newdata
+    }
+    preds <- data.frame(base, preds)
+  }
+  
+  preds
+}
+
+```
+
+Obtain predictions for linear data from gamm model.
+
+```{r}
+# Obtain Predictions
+eyefitting.grid.gamm <- expand_grid(parm_id = c("S", "V", "F", "N"),
+                                    x = seq(0,20, 0.5),
+                                    participant_id = eyefitting_model_data$participant_id[1])
+
+# OLS
+eyefitting.ols.preds <- predict_gamm(eyefitting.ols.gamm, newdata = eyefitting.grid.gamm, se = T, re_form = NA)
+eyefitting.grid.gamm$ols.pred <- eyefitting.ols.preds$prediction
+eyefitting.grid.gamm$ols.lower <- eyefitting.ols.preds$prediction - (1.96 * eyefitting.ols.preds$se)
+eyefitting.grid.gamm$ols.upper <- eyefitting.ols.preds$prediction + (1.96 * eyefitting.ols.preds$se)
+
+# pca
+eyefitting.pca.preds <- predict_gamm(eyefitting.pca.gamm, newdata = eyefitting.grid.gamm, se = T, re_form = NA)
+eyefitting.grid.gamm$pca.pred <- eyefitting.pca.preds$prediction
+eyefitting.grid.gamm$pca.lower <- eyefitting.pca.preds$prediction - (1.96 * eyefitting.pca.preds$se)
+eyefitting.grid.gamm$pca.upper <- eyefitting.pca.preds$prediction + (1.96 * eyefitting.pca.preds$se)
+
+eyefitting_gamm_preds <- eyefitting.grid.gamm
+
+# write.csv(eyefitting.grid.gamm, file = here("analyses/02b-eyefitting/data/eyefitting-gamm-preds.csv"), row.names = F, na = "")
+```
+
+Create gamm plot for linear data.
+
+```{r}
+eyefitting_gamm_plot <- eyefitting_gamm_preds %>%
+  filter((parm_id %in% c("F", "N", "S") | (x <= 16 & x >= 4))) %>%
+  mutate(parm_id = factor(parm_id, levels = c("S", "F", "V", "N"))) %>%
+  filter(parm_id == "F") %>%
+  ggplot(aes(x = x)) +
+  geom_line(data = eyefitting_model_data %>% 
+              filter(prolific_id %in% participant_sample)  %>% filter(parm_id == "F"), 
+            aes(x = x, y = residual_ols_loess, group = plot_id, color = "OLS"), alpha = 0.1) +
+  geom_line(data = eyefitting_model_data %>% 
+              filter(prolific_id %in% participant_sample)  %>% filter(parm_id == "F"), 
+            aes(x = x, y = residual_pca_loess, group = plot_id, color = "PCA"), alpha = 0.1) +
+  geom_ribbon(aes(ymin = ols.lower, ymax = ols.upper, fill = "OLS"), color = NA, alpha = 0.4) +
+  geom_line(aes(y = ols.pred, color = "OLS")) +
+  geom_ribbon(aes(ymin = pca.lower, ymax = pca.upper, fill = "PCA"), color = NA, alpha = 0.4) +
+  geom_line(aes(y = pca.pred, color = "PCA")) +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
+  facet_wrap(~parm_id, labeller = labeller(parm_id = label_both), scales = "free") +
+  theme_bw(base_size = 14) +
+  theme(aspect.ratio = 1,
+        legend.position = "bottom",
+        plot.title   = element_text(size = 14, hjust = 0),
+        axis.text    = element_text(size = 12),
+        axis.title   = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        legend.text  = element_text(size = 12),
+        # strip.text = element_text(size = 5, margin = margin(0.05,0,0.05,0, "cm")),
+        # strip.background = element_rect(size = 0.5),
+        legend.key.size = unit(1, "line"), legend.box="vertical", legend.margin=margin()
+        ) +
+  scale_y_continuous("Residual", limits = c(-5,5), breaks = seq(-5,5,2.5)) +
+  scale_color_manual("Individual participant \nresiduals", values = c("steelblue", "orange"), labels = c("OLS", "PCA")) +
+  scale_fill_manual("GAMM fitted trend", values = c("steelblue", "orange"), labels = c("OLS", "PCA"))   +
+  guides(color = guide_legend(override.aes = list(alpha = 1)),
+         fill = guide_legend(override.aes = list(alpha = 1)))
+
+eyefitting_gamm_plot
+```
+
+
+# Nonlinear Study
+
+Read in youdrawit_model_data and eyefitting_simulated_data.
+
+```{r}
+youdrawit_model_data <- read.csv("https://github.com/earobinson95/sdss-2022-you-draw-it-manuscript/raw/master/data/youdrawit-model-data.csv")
+
+factorCols <- c("nick_name", "ip_address", "prolific_id", "age", "gender", "academic_study", "computer_mouse", "recruitment", "participant_id", "plot_id", "beta", "points_truncated", "scale")
+youdrawit_model_data[,factorCols] <- lapply(youdrawit_model_data[,factorCols], factor)
+
+youdrawit_model_data %>%
+  select(participant_id, beta, points_truncated, scale, x, ynls, ydrawn, yloess, residual_nls_drawn) %>%
+  head() %>%
+  knitr::kable()
+
+youdrawit_model_data      <- youdrawit_model_data  %>%
+  mutate(`Points Truncated` = ifelse(points_truncated == 10, "50%", "75%"),
+         `Growth Rate` = ifelse(beta == "beta0.1", "Low", "High")) %>%
+  mutate(`Growth Rate` = factor(`Growth Rate`, levels = c("Low", "High"))) %>%
+  filter(`Points Truncated` == "50%", `Growth Rate` == "High")
+
+youdrawit_simulated_band <- youdrawit_model_data %>%
+  group_by(`Growth Rate`, `Points Truncated`, x) %>%
+  summarize(min_ynls = min(ynls),
+            max_ynls = max(ynls))
+```
+
+There are `r length(unique(youdrawit_model_data$participant_id)) %>% as.numeric` participants and `r length(unique(youdrawit_model_data$plot_id)) %>% as.numeric()` 'You Draw It' task plots complete.
+
+Create spaghetti plot for visual analysis.
+
+```{r}
+
+spaghetti_plot <- youdrawit_model_data %>%
+  ggplot(aes(x = x)) +
+  geom_line(aes(y = yloess, group = plot_id, color = scale), alpha = 0.2) +
+  geom_ribbon(data = youdrawit_simulated_band, aes(ymin = min_ynls, ymax = max_ynls, fill = "Fitted NLS", group = NA), color = NA, alpha = 0.35) +
+  # facet_grid(`Growth Rate` ~ `Points Truncated`, scales = "free", labeller = labeller(`Growth Rate` = label_both, `Points Truncated` = label_both)) +
+  theme_bw() +
+  theme(aspect.ratio = 1,
+        legend.position = "right"
+        ) +
+  scale_color_manual("", values = c("steelblue", "orange"), labels = c("Visual fit, linear scale \n (drawn, loess)", "Visual fit, log scale \n (drawn, loess)")) +
+  scale_fill_manual("", values = c("black"), labels = c("Range of fitted values \n from statistically fitted regression \n lines (NLS)")) +
+  scale_x_continuous(limits = c(10, 20)) +
+  scale_y_continuous("y", limits = c(0, 300), breaks = seq(0,300,50)) +
+  guides(color = guide_legend(override.aes = list(alpha = 1)),
+         fill = guide_legend(override.aes = list(alpha = 0.3)))
+spaghetti_plot
+```
+

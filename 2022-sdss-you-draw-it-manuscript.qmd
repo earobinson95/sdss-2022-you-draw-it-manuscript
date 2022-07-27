@@ -2,8 +2,10 @@
 title: "'You Draw It': Implementation of visually fitted trends with `r2d3`"
 bibliography: references.bib
 abstract: "How do statistical regression results compare to intuitive, visually fitted results? Fitting lines by eye through a set of points has been explored since the 20th century. Common methods of fitting trends by eye involve maneuvering a string, black thread, or ruler until the fit is suitable, then drawing the line through the set of points. In 2015, the New York Times introduced an interactive feature, called 'You Draw It,' where readers are asked to input their own assumptions about various metrics and compare how these assumptions relate to reality. This research is intended to implement 'You Draw It', adapted from the New York Times, as a way to measure the patterns we see in data."
-author:
+author: 
   - Emily A. Robinson
+  - Reka Howard
+  - Susan VanderPlas
 keywords: 'graphics, user interaction, regression'
 format: 
   pdf:
@@ -597,12 +599,11 @@ As with any method for testing statistical graphics, there are a host of additio
 # Supplementary Material {-}
 
 + **'You Draw It' Demonstration Applet:** The shiny app used to demonstrate the 'You Draw It' method can be accessed at  [emily-robinson.shinyapps.io/you-draw-it-validation-applet](https://emily-robinson.shinyapps.io/you-draw-it-validation-applet/).
-+ **'You Draw It' Code:** The 'You Draw It' JavaScript code can be accessed at  [github.com/earobinson95/presentations/blob/master/can-you-draw-it/www/you-draw-it.js](https://github.com/earobinson95/presentations/blob/master/can-you-draw-it/www/you-draw-it.js).
++ **'You Draw It' Script:** The 'You Draw It' JavaScript code can be accessed at  [github.com/earobinson95/presentations/blob/master/can-you-draw-it/www/you-draw-it.js](https://github.com/earobinson95/presentations/blob/master/can-you-draw-it/www/you-draw-it.js).
 + **Study Applet:** The shiny app used to conduct the study can be accessed at  [shiny.srvanderplas.com/perception-of-statistical-graphics/](https://shiny.srvanderplas.com/perception-of-statistical-graphics/).
 + **Study Applet Code:** The code used to create the RShiny Applet for data collection can be found at [github.com/earobinson95/log-perception-prolific/tree/main/perception-of-statistical-graphics](https://github.com/earobinson95/log-perception-prolific/tree/main/perception-of-statistical-graphics).
-+ **Participant Data (Linear):** De-identified participant data collected in the study and used for analyses are available to be downloaded from GitHub at  [github.com/earobinson95/log-perception-prolific/raw/main/analyses/02b-eyefitting/data/eyefitting-model-data.csv](https://github.com/earobinson95/log-perception-prolific/raw/main/analyses/02b-eyefitting/data/eyefitting-model-data.csv). 
-+ **Data Analysis Code (Linear):** The code used to replicate the linear study analysis in this paper can be found at [github.com/earobinson95/log-perception-prolific/blob/main/analyses/02b-eyefitting/eyefitting-analysis.Rmd](https://github.com/earobinson95/log-perception-prolific/blob/main/analyses/02b-eyefitting/eyefitting-analysis.Rmd).
-+ **Participant Data (Non-linear):** De-identified participant data collected in the study and used for analyses are available to be downloaded from GitHub at  [github.com/earobinson95/log-perception-prolific/raw/main/analyses/02a-you-draw-it/data/youdrawit-model-data.csv](https://github.com/earobinson95/log-perception-prolific/raw/main/analyses/02a-you-draw-it/data/youdrawit-model-data.csv). 
-+ **Data Analysis Code (Non-linear):** The code used to replicate the nonlinear study analysis in this paper can be found at [github.com/earobinson95/log-perception-prolific/blob/main/analyses/02a-you-draw-it/you-draw-it-analysis.Rmd](https://github.com/earobinson95/log-perception-prolific/blob/main/analyses/02a-you-draw-it/you-draw-it-analysis.Rmd).
++ **Participant Data (Linear):** De-identified participant data collected in the study and used for analyses are available to be downloaded from GitHub at  [github.com/earobinson95/sdss-2022-you-draw-it-manuscript/raw/master/data/eyefitting-model-data.csv](https://github.com/earobinson95/sdss-2022-you-draw-it-manuscript/raw/master/data/eyefitting-model-data.csv). 
++ **Participant Data (Nonlinear):** De-identified participant data collected in the study and used for analyses are available to be downloaded from GitHub at  [github.com/earobinson95/sdss-2022-you-draw-it-manuscript/raw/master/data/youdrawit-model-data.csv](https://github.com/earobinson95/sdss-2022-you-draw-it-manuscript/raw/master/data/youdrawit-model-data.csv). 
++ **Data Analysis Code:** The code used to replicate the nonlinear study analysis in this paper can be found at [earobinson95.github.io/sdss-2022-you-draw-it/analysis/data-analysis.html](earobinson95.github.io/sdss-2022-you-draw-it/analysis/data-analysis.html).
 
 # References
