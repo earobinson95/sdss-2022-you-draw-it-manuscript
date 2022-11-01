@@ -134,7 +134,7 @@ eyefitting_example <- eyefitting_model_data %>%
   facet_wrap(~`Parameter Choice`, labeller = labeller(`Parameter Choice` = label_both)) +
   theme_bw(base_size = 14) +
   theme(aspect.ratio = 1,
-        legend.position = "right",
+        legend.position = "bottom",
         plot.title   = element_text(size = 14, hjust = 0),
         axis.text    = element_text(size = 12),
         axis.title   = element_text(size = 12),
@@ -266,7 +266,7 @@ Our visual system is naturally built to look for structure and identify patterns
 As shown in @fig-gas-prices, a viewer engaging with a plot of weekly average gas prices over time may perform several cognitive operations. First, they scan the plot and assesses points to determine if there are any outliers or otherwise remarkable points. Then, they may fit a rough mental smooth/trend line to the points to summarize the useful information and remove variability. Finally, an interested and engaged viewer may pull in additional contextual information from long-term memory, seeking to explain variation in the mental 'trend' with supplemental information, such as COVID lock downs which reduced gasoline demand and the beginning of the war in Ukraine, which wreaked havoc on the supply and demand for global energy sources.
 
 ```{r gas-prices, echo = F, message = F, warning = F}
-#| fig-cap: "Demonstration of a viewer's engagement with a scatterplot showing the weekly average gas prices in the United States, from 2019-June 2022. The veiwer might perform several cognitive operations such as assessing points to determine outliers, fitting a rough mental smooth/trend line (overlaying solid gray line), and using additional contextual information from long term memory to explain the variation (shaded rectangular gray regions annotated in black text) [@usenergyinformationadministrationWeeklyAllGrades2022]. "
+#| fig-cap: "Weekly average gas prices in the United States, 2019-June 2022. Additional mental operations a viewer might perform while looking at the plot are annotated in grey [@usenergyinformationadministrationWeeklyAllGrades2022]."
 #| out-width: \columnwidth
 #| label: fig-gas-prices
 #| fig-res: 300
@@ -285,13 +285,13 @@ annotations <- tibble(
   label = c("COVID lockdowns", "War in Ukraine")
 )
 ggplot(gas, aes(x = Date, y = Price)) + 
-  geom_rect(data = annotations, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax), alpha= 0.3, fill = "gray30", inherit.aes = F) + 
-  geom_text(data = annotations, aes(x = xmin, y = 1, label = label), color = "black") + 
+  geom_rect(data = annotations, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax), alpha= 0.2, fill = "grey", inherit.aes = F) + 
+  geom_text(data = annotations, aes(x = xmin, y = 1, label = label), color = "grey") + 
   ylab("Price per Gallon ($)") + 
   ggtitle("Weekly Average Gas Prices in the United States, 2019 - 2022", subtitle = "US Energy Information Administration") + 
-  geom_point(shape = 1) + 
+  geom_point() + 
   scale_x_datetime(limits = as.POSIXct(ymd("2019-01-01", "2022-06-29"))) + 
-  geom_line(se = F, color = "grey30", method = "loess", span = .1, alpha = .6, stat = "smooth", size = 1.5)
+  geom_line(se = F, color = "grey", method = "loess", span = .1, alpha = .5, stat = "smooth", size = 1.5)
 ```
 
 Initial studies in the 20th century explored the use of fitting lines by eye through a set of points [@finney1951subjective; @mosteller1981eye; @unwin1988eyeballing]. Common methods of fitting trends by eye involved maneuvering a string, black thread, or ruler until the fit was suitable, then drawing the line through the set of points. Results from these early studies provided groundwork for visually judging slopes and selecting accurate starting values for common iterative calculations. Recently, @ciccione2021can conducted a comprehensive set of studies investigating human ability to detect trends in graphical representations from a psychophysical approach.
@@ -353,29 +353,10 @@ While this is not particularly problematic for our applications to date, it migh
 
 During testing of our modifications to the 'You Draw It' script, we discovered that frequently the JavaScript code would ``skip" from point to point out of sequence. This resulted in a jagged line (visually) with missing values in the underlying stored array of data; as a result, the for-loop controlling the user-drawn line never exited and the user's data was not recorded. While it would have been possible to fix this using some sort of interpolation algorithm, we did not want to compromise user results by introducing interpolation artifacts, so we opted instead for a visual cue that fixed the problem by modifying the human behavior.
 
-<!-- ![You Draw It task plot as shown to user.     -->
-<!-- **left:** Initial state, with instructions *Use your mouse to fill in the trend in the yellow box region.*     -->
-<!-- **middle:** User view during task completion.     -->
-<!-- **right:** Finished state](images/ydi-stimuli.png){#fig-you-draw-it-task-plot} -->
-
-```{r ydi-stimuli}
-#| fig-cap: "You Draw It task plot as shown to user. \\textbf{top:} Initial state, with instructions, \\textit{Use your mouse to fill in the trend in the yellow box region.} \\textbf{middle:} User view during task completion. \\textbf{bottom:} Finished state."
-#| out-width: "70%"
-#| label: fig-you-draw-it-task-plot
-#| fig-res: 300
-#| fig-width: 3.3
-#| fig-height: 10
-#| fig-env: figure
-#| warning: false
-#| message: false
-
-library(cowplot)
-frame1 <- ggdraw() + draw_image("images/ydi-stimuli-frame1.PNG")
-frame2 <- ggdraw() + draw_image("images/ydi-stimuli-frame2.PNG")
-frame3 <- ggdraw() + draw_image("images/ydi-stimuli-frame3.PNG")
-
-frame1 + frame2 + frame3 + plot_layout(ncol = 1)
-```
+![You Draw It task plot as shown to user.    
+**left:** Initial state, with instructions *Use your mouse to fill in the trend in the yellow box region.*    
+**middle:** User view during task completion.    
+**right:** Finished state](images/ydi-stimuli.png){#fig-you-draw-it-task-plot}
 
 As shown in @fig-you-draw-it-task-plot, the user-filled portion of the plot is represented with a yellow rectangle, which adapts to the user's input and spans any missing values. 
 When the box disappears, the array is filled in and the user can submit their response.
@@ -389,17 +370,8 @@ The initial plot is rendered using Shiny's `RenderD3` and `d3Output` functions; 
 Once the user is done drawing the line, we save the results of the drawn line to a SQLite database, using Shiny to pass data from JavaScript to R. 
 The connections between each portion of the app are shown in @fig-you-draw-it-code-sketch.
 
-```{r, code sketch}
-#| fig-cap: "Sketch of underlying code for 'You Draw It', illustrating the data simulation conducted in R, the initial setup of the visual stimuli with D3 source code, along with the iterative process between the user interaction and plotting in Shiny. Once the user is done drawing the line, we saved the results of the drawn line to a database for analysis."
-#| out-width: \columnwidth
-#| label: fig-you-draw-it-code-sketch
-#| fig-res: 300
-#| fig-width: 12
-#| fig-height: 6
-#| fig-env: figure
-knitr::include_graphics("images/code-sketch.png")
-# knitr::include_graphics("images/code-sketch.svg")
-```
+
+![Sketch of underlying code for 'You Draw It', illustrating the data simulation conducted in R, the initial setup of the visual stimuli with D3 source code, along with the iterative process between the user interaction and plotting in Shiny. Once the user is done drawing the line, we saved the results of the drawn line to a database for analysis.](images/code-sketch-2.png){#fig-you-draw-it-code-sketch}
 
 One additional challenge when integrating the D3 graphics into the Shiny application is that by default, most Shiny applications use a reactive framework that adjusts to the user's browser size. When working with D3, however, this can be problematic: most D3 parameters are specified at the pixel level. The discontinuity between the assumptions of Shiny and D3 meant that we had to fix the size of the Shiny element, and then perform a check to ensure that the user's screen was sufficiently big to render the plot. While in an ideal world, users could participate using cell phones, tablets, and traditional laptop/desktop computers, functionally our checks limited users' ability to participate using smaller screen sizes found in cell phones and some tablets.
 Additionally, after some feedback by laptop users during pilot testing, we included an additional requirement that participants have a computer mouse available; the results from touchpad users were qualitatively different (more jagged) in ways suggesting that the recorded data did not adequately describe users' perceptions.
@@ -502,7 +474,7 @@ For each participant, four unique data sets were randomly and independently gene
 When participants started the study, they were first asked to complete two practice plots - accompanied by instructions and a .gif demonstrating the task - in order to train them in the skills associated with executing the task.
 The four 'You Draw It' task plots associated with the selected parameters followed the practice plots in a random order for each individual; these plots were interspersed with plots from a different experiment.
 
-Participants were recruited via Prolific, a crowd sourcing platform for researchers to recruit participants for their online studies, in March 2022; while this study does utilize a convenience sample, as this is primarily a perceptual task, previous results have found few differences between expert and non-expert participants in this context [@vanderplas2015spatial].
+Participants were recruited via Prolific in March 2022; while this study does utilize a convenience sample, as this is primarily a perceptual task, previous results have found few differences between expert and non-expert participants in this context [@vanderplas2015spatial].
 The study was conducted and distributed via a Shiny application and participants completed the tasks on their own computer, with a computer mouse, and in an environment of their choosing.
 The data from this study were collected to validate this method of graphical testing, with the hopes of providing a new tool to assess graphical perception interactively.
 
@@ -522,26 +494,14 @@ We use mixed model methods to analyze residual trends and capture the variabilit
 #| out-width: \columnwidth
 #| label: fig-eyefitting-plots
 #| fig-res: 300
-#| fig-width: 9
-#| fig-height: 11
+#| fig-width: 12
+#| fig-height: 6
 #| fig-env: figure
 
-((eyefitting_example + 
-    ggtitle("A. Example") + 
-    theme(plot.title = element_text(hjust = 1/3), legend.position = "bottom"))
- ) /
- (((eyefitting_lmer_plot + 
-      ggtitle("B. LMER Results")  +
-     theme(legend.position = "bottom")
-    ) + 
-  (eyefitting_gamm_plot + 
-     ggtitle("C. GAMM Results")  +
-     theme(legend.position = "bottom")
-   )
-  )
-  # plot_layout(guides = 'collect')
-  ) +
-  plot_layout(widths = c(1, 2))
+(eyefitting_example + ggtitle("A. Example")) + 
+  (eyefitting_lmer_plot + ggtitle("B. LMER Results")) + 
+  (eyefitting_gamm_plot + ggtitle("C. GAMM Results")) +
+  plot_layout(ncol =  3)
 ```
 
 We first fit a linear mixed model (LMM) to the OLS and PCA residuals separately using the `lmer` function in the `lme4` package [@lme4-pkg], constraining the fit to a linear trend.
@@ -621,14 +581,6 @@ spaghetti_plot
 ```
 
 <!-- \svp{It's also worth remarking on the effectiveness of the spaghetti plots and GAMM plots for visual analysis of the results. Gotta keep pounding the "visual analytics is statistics" drum a bit :). } -->
-
-# Discussion
-
-Individual interactivity increases user experience & increases user engagement with data (CITATION?)
-
-+ Interactive reading (NYT)
-+ Interactive Testing (perceptual)
-+ Interactive Teaching
 
 # Conclusion
 

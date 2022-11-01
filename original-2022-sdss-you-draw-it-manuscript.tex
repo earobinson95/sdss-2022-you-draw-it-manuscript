@@ -174,7 +174,7 @@
 
 \title{`You Draw It': Implementation of visually fitted trends with
 \texttt{r2d3}}
-\author{}
+% \author{}
 \date{}
 
 \begin{document}
@@ -196,7 +196,7 @@ for testing statistical graphics. We present an empirical evaluation of
 this testing method for linear regression, and briefly discuss an
 extension of this method to non-linear applications.
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, enhanced, breakable, sharp corners, frame hidden, interior hidden]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[borderline west={3pt}{0pt}{shadecolor}, frame hidden, enhanced, breakable, sharp corners, interior hidden, boxrule=0pt]}{\end{tcolorbox}}\fi
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -239,14 +239,10 @@ energy sources.
 
 }
 
-\caption{\label{fig-gas-prices}Demonstration of a viewer's engagement
-with a scatterplot showing the weekly average gas prices in the United
-States, from 2019-June 2022. The veiwer might perform several cognitive
-operations such as assessing points to determine outliers, fitting a
-rough mental smooth/trend line (overlaying solid gray line), and using
-additional contextual information from long term memory to explain the
-variation (shaded rectangular gray regions annotated in black text) (US
-Energy Information Administration 2022).}
+\caption{\label{fig-gas-prices}Weekly average gas prices in the United
+States, 2019-June 2022. Additional mental operations a viewer might
+perform while looking at the plot are annotated in grey (US Energy
+Information Administration 2022).}
 
 \end{figure}
 
@@ -408,15 +404,16 @@ human behavior.
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.7\textwidth,height=\textheight]{./images/fig-you-draw-it-task-plot-1.pdf}
+{\centering \includegraphics{images/ydi-stimuli.png}
 
 }
 
 \caption{\label{fig-you-draw-it-task-plot}You Draw It task plot as shown
-to user. \textbf{top:} Initial state, with instructions,
-\textit{Use your mouse to fill in the trend in the yellow box region.}
-\textbf{middle:} User view during task completion. \textbf{bottom:}
-Finished state.}
+to user.\\
+\textbf{left:} Initial state, with instructions \emph{Use your mouse to
+fill in the trend in the yellow box region.}\\
+\textbf{middle:} User view during task completion.\\
+\textbf{right:} Finished state}
 
 \end{figure}
 
@@ -452,7 +449,7 @@ shown in Figure~\ref{fig-you-draw-it-code-sketch}.
 
 \begin{figure}
 
-{\centering \includegraphics{images/code-sketch.png}
+{\centering \includegraphics{images/code-sketch-2.png}
 
 }
 
@@ -533,17 +530,16 @@ the selected parameters followed the practice plots in a random order
 for each individual; these plots were interspersed with plots from a
 different experiment.
 
-Participants were recruited via Prolific, a crowd sourcing platform for
-researchers to recruit participants for their online studies, in March
-2022; while this study does utilize a convenience sample, as this is
-primarily a perceptual task, previous results have found few differences
-between expert and non-expert participants in this context (VanderPlas
-and Hofmann 2015). The study was conducted and distributed via a Shiny
-application and participants completed the tasks on their own computer,
-with a computer mouse, and in an environment of their choosing. The data
-from this study were collected to validate this method of graphical
-testing, with the hopes of providing a new tool to assess graphical
-perception interactively.
+Participants were recruited via Prolific in March 2022; while this study
+does utilize a convenience sample, as this is primarily a perceptual
+task, previous results have found few differences between expert and
+non-expert participants in this context (VanderPlas and Hofmann 2015).
+The study was conducted and distributed via a Shiny application and
+participants completed the tasks on their own computer, with a computer
+mouse, and in an environment of their choosing. The data from this study
+were collected to validate this method of graphical testing, with the
+hopes of providing a new tool to assess graphical perception
+interactively.
 
 \hypertarget{data-analysis-and-results}{%
 \subsection{Data Analysis and Results}\label{data-analysis-and-results}}
@@ -732,22 +728,6 @@ shows the range fitted values from the statistically fitted regression
 lines.}
 
 \end{figure}
-
-\hypertarget{discussion}{%
-\section{Discussion}\label{discussion}}
-
-Individual interactivity increases user experience \& increases user
-engagement with data (CITATION?)
-
-\begin{itemize}
-\tightlist
-\item
-  Interactive reading (NYT)
-\item
-  Interactive Testing (perceptual)
-\item
-  Interactive Teaching
-\end{itemize}
 
 \hypertarget{conclusion}{%
 \section{Conclusion}\label{conclusion}}

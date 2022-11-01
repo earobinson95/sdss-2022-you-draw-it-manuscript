@@ -1,0 +1,53 @@
+---
+title: "Response to reviewers of JDS2207-018 "
+subtitle: "'You Draw It': Implementation of visually fitted trends with `r2d3`"
+author: "Emily A. Robinson, Reka Howard, and Susan VanderPlas"
+date: "2022"
+# output: pdf_document
+format: 
+  pdf:
+    include-in-header:
+      - revision-edits.tex
+---
+
+## Reviewer(s)' Comments to Author
+
+All responses to reviewers' comments are written in \response{blue}.
+
+<!-- \todo{Need to address yet.} \dubcheck{Double check / review.} -->
+
+### Review: Associate Editor
+
+This is a nicely written paper about an implementation of a tool to assess visually fitted trends. This tool was inspired by a New York Times feature "You Draw It" and was developed using the r2d3 R package. The authors explain the motivation for developing the tool, provide computing details, and present results from an experiment studying how people fit trends by visualizing them on a scatter plot.
+
+\todo{The primary element missing from the paper is how this tool and insights from the experiment might be useful for the reader. One context that came to mind was classroom use, where instructors could use the tool in lessons about multivariable relationships and regression. It would be beneficial for the authors to include more detail about how this might be used in practice.}
+
+Some minor edits:
+
++ Figure 1: The gray is hard to see, particularly for the fitted line. It would also be helpful to add more details to the to the labels on the plot or to the caption to clarify what the plot is showing. Right now it is unclear unless without reading the paragraph description in the body of the text.
+  + \response{Figure 1's readability was increased by changing the text on the graphic to black, darkening the gray and alpha blending of the shaded rectangle regions, making the points open circles rather than closed, and darking the gray and increasing the alpha blending of the fitted line.}
+  + \response{We elaborated in the caption for figure 1 to clarify what the plot is showing: "Demonstration of a viewer's engagement with a scatterplot showing the weekly average gas prices in the United States, from 2019-June 2022. The veiwer might perform several cognitive operations such as assessing points to determine outliers, fitting a rough mental smooth/trend line (overlaying solid gray line), and using additional contextual information from long term memory to explain the variation (shaded rectangular gray regions annotated in black text)."}
+
++ pg. 11 - Please provide a brief description of Prolific for readers unfamiliar with company.
+  + \response{A breif description of prolific, "a crowd sourcing platform for researchers to recruit participants for their online studies," was added to the Validation Study section.}
+
+
+### Review: Guest Editor for the SDSS Special Issue of the JDS
+
+I agree with the AE’s decision of “Requires Major Revision”. 
+
++ \todo{In addition to the AE’s comments, another possible application is using the tool for staff training. There is a growing demand to train up staff given the current job market.} 
+
++ Another comment is that I recommend the authors update figure 2 too (AE commented about figure 1), because the gray text is hard to see. 
+  + \response{Figure 2 is a screenshot directly from the New York Times website used to demonstrate the use of the 'You Draw It' feature for interactive reading. While we could try to recreate this image or modify the colors, this changes the actual figure shown to readers in the New York Times.}
+
++ Also, figures 3 and 6 are difficult to read given there are three subplots. If there is space, perhaps the authors can reconfigure the plots, such as creating two rows (i.e., one plot in one row, and two plots in one row). 
+  + \response{Figure 3 was reconstructed to provide the three subplots in vertical order spanning an entire page for better visability. As these subplots have a natural flow, we did not want to interupt this by creating a 2 + 1 subplot figure structure.}
+  + \response{Figure 6 was reconstructed to provide a 1 + 2 subplot figure structure, keeping the two predicted plots from different models next to each other in the second row.}
+
++ Further, please note that all figures should be generated as vector images to ensure they’re high quality for final journal publication.
+  + \response{Figure 1, Figure 5, and Figure 6 were generated within R and saved directly to pdf files from within the R environment.}
+  + \response{Figure 2 and Figure 3 were screenshots taken from websites. We zoomed in on a high quality screen and took a screenshot; saved as high resolution png files.}
+  + \response{Figure 4 was sketched using an online tool; saving this as an svg changes the appearance of the font type and we would like to keep the sketched font. We saved this at the highest resoultion the tool allowed as a png file.}
+  
+  
