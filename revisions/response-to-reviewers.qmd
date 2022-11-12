@@ -20,7 +20,10 @@ All responses to reviewers' comments are written in \response{blue}.
 
 This is a nicely written paper about an implementation of a tool to assess visually fitted trends. This tool was inspired by a New York Times feature "You Draw It" and was developed using the r2d3 R package. The authors explain the motivation for developing the tool, provide computing details, and present results from an experiment studying how people fit trends by visualizing them on a scatter plot.
 
-\todo{The primary element missing from the paper is how this tool and insights from the experiment might be useful for the reader. One context that came to mind was classroom use, where instructors could use the tool in lessons about multivariable relationships and regression. It would be beneficial for the authors to include more detail about how this might be used in practice.}
+The primary element missing from the paper is how this tool and insights from the experiment might be useful for the reader. One context that came to mind was classroom use, where instructors could use the tool in lessons about multivariable relationships and regression. It would be beneficial for the authors to include more detail about how this might be used in practice.
+
++ \response{We added a discussion section to address the appllicaiton of teaching and training by connecting the idea of the tool being used for interactive reading (NYT), interactive testing (our study), and interactive teaching/training (future applicaiton).}
+
 
 Some minor edits:
 
@@ -36,7 +39,8 @@ Some minor edits:
 
 I agree with the AE’s decision of “Requires Major Revision”. 
 
-+ \todo{In addition to the AE’s comments, another possible application is using the tool for staff training. There is a growing demand to train up staff given the current job market.} 
++ In addition to the AE’s comments, another possible application is using the tool for staff training. There is a growing demand to train up staff given the current job market.
+  + \response{We added a discussion section to address the appllicaiton of teaching and training by connecting the idea of the tool being used for interactive reading (NYT), interactive testing (our study), and interactive teaching/training (future applicaiton).}
 
 + Another comment is that I recommend the authors update figure 2 too (AE commented about figure 1), because the gray text is hard to see. 
   + \response{Figure 2 is a screenshot directly from the New York Times website used to demonstrate the use of the 'You Draw It' feature for interactive reading. While we could try to recreate this image or modify the colors, this changes the actual figure shown to readers in the New York Times.}
@@ -46,7 +50,7 @@ I agree with the AE’s decision of “Requires Major Revision”.
   + \response{Figure 6 was reconstructed to provide a 1 + 2 subplot figure structure, keeping the two predicted plots from different models next to each other in the second row.}
 
 + Further, please note that all figures should be generated as vector images to ensure they’re high quality for final journal publication.
-  + \response{Figure 1, Figure 5, and Figure 6 were generated within R and saved directly to pdf files from within the R environment.}
+  + \response{Figure 1, Figure 5, and Figure 6 were generated within R and saved directly to pdf files from within the R environment. We expect these are all vector compatible; please let us know if this isn't sufficient or if we should use a different graphics device.}
   + \response{Figure 2 and Figure 3 were screenshots taken from websites. We zoomed in on a high quality screen and took a screenshot; saved as high resolution png files.}
   + \response{Figure 4 was sketched using an online tool; saving this as an svg changes the appearance of the font type and we would like to keep the sketched font. We saved this at the highest resoultion the tool allowed as a png file.}
   

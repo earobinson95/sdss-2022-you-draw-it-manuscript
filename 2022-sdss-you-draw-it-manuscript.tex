@@ -196,7 +196,7 @@ for testing statistical graphics. We present an empirical evaluation of
 this testing method for linear regression, and briefly discuss an
 extension of this method to non-linear applications.
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, enhanced, breakable, sharp corners, frame hidden, interior hidden]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, enhanced, interior hidden, sharp corners, borderline west={3pt}{0pt}{shadecolor}, frame hidden, boxrule=0pt]}{\end{tcolorbox}}\fi
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -736,18 +736,37 @@ lines.}
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
-Individual interactivity increases user experience \& increases user
-engagement with data (CITATION?)
-
-\begin{itemize}
-\tightlist
-\item
-  Interactive reading (NYT)
-\item
-  Interactive Testing (perceptual)
-\item
-  Interactive Teaching
-\end{itemize}
+The `You Draw It' graphical task presented in this work is an example of
+an interactive graphic. While any communication between user and device
+can be considered an interaction, interactive graphics should be defined
+as a user-driven direct manipulation of plots and plotting elements with
+an immediate reaction (Unwin 1999, Becker et al.~1987, Eick \& Wills
+1995). Here we discuss the use of `You Draw It' as a tool for
+interactive reading, interactive testing, and interactive teaching as a
+way to increase user experience and user engagement with data. The New
+York Times first introduced the `You Draw It' feature as a tool for
+interactive reading. The inclusion of interactive graphics in news and
+media have been used to inform readers in efforts to reduce
+misconceptions and aid in storytelling (Geidner et al. 2015;
+George-Palilonis and Spillman 2011, 2013). In our work, we demonstrated
+the use of the `You Draw It' method as a tool for interactive testing of
+graphics. We collect data of the user drawn lines and compare to
+statistical results in order to understand perceptual biases. While this
+work has many possible directions for future work, there is a strong
+application to extend the `You Draw It' tool for interactive teaching.
+The line of best fit is introduced in secondary schools as a student's
+first encounter with the concept of statistical association (Casey and
+Nagle 2016). Casey (2015) and Casey (2016) conducted task based
+interviews to examine student's conceptions of the line of best fit
+prior to introducing the topic. The implications of using interactive
+teaching tools for the line of best fit can help students make
+connections between the shift in slope and the location of the best fit
+line (Nagle, Casey, and Moore-Russo 2017). Casey and Wasserman (2015)
+conducted similar task based interviews wish pre-service mathematics
+teachers in order to understand the implications regarding teacher
+preparation for the teaching of this topic. This demonstrates the use of
+the `You Draw It' interactive tool for training purposes both within a
+classroom setting and for those in the workforce.
 
 \hypertarget{conclusion}{%
 \section{Conclusion}\label{conclusion}}
@@ -838,6 +857,25 @@ Bostock, Michael, Vadim Ogievetsky, and Jeffrey Heer. 2011. {``D\(^3\)
 Data-Driven Documents.''} \emph{IEEE Transactions on Visualization and
 Computer Graphics} 17 (12): 2301--9.
 
+\leavevmode\vadjust pre{\hypertarget{ref-casey2015examining}{}}%
+Casey, Stephanie A. 2015. {``Examining Student Conceptions of
+Covariation: A Focus on the Line of Best Fit.''} \emph{Journal of
+Statistics Education} 23 (1).
+
+\leavevmode\vadjust pre{\hypertarget{ref-casey2016finding}{}}%
+---------. 2016. {``Finding What Fits.''} \emph{Mathematics Teaching in
+the Middle School} 21 (8): 484--91.
+
+\leavevmode\vadjust pre{\hypertarget{ref-casey2016students}{}}%
+Casey, Stephanie A, and Courtney Nagle. 2016. {``Students' Use of Slope
+Conceptualizations When Reasoning about the Line of Best Fit.''}
+\emph{Educational Studies in Mathematics} 92 (2): 163--77.
+
+\leavevmode\vadjust pre{\hypertarget{ref-casey2015teachers}{}}%
+Casey, Stephanie A, and Nicholas H Wasserman. 2015.
+{``TEACHERS'KNOWLEDGE ABOUT INFORMAL LINE OF BEST FIT.''}
+\emph{Statistics Education Research Journal} 14 (1): 8--35.
+
 \leavevmode\vadjust pre{\hypertarget{ref-ciccione2021can}{}}%
 Ciccione, Lorenzo, and Stanislas Dehaene. 2021. {``Can Humans Perform
 Mental Regression on a Graph? Accuracy and Bias in the Perception of
@@ -856,10 +894,31 @@ Furic, Benoit. 2017. {``You-Draw-It-Graph: The User Can Draw His Own
 Graph Line and Compare with the Reality.''} \emph{GitHub}.
 \url{https://github.com/BenoitFuric/you-draw-it-graph}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-geidner2015role}{}}%
+Geidner, Nick, Ivanka Pjesivac, Iveta Imre, Ioana Coman, and Dzmitry
+Yuran. 2015. {``The Role of Interactive Graphics in Reducing
+Misperceptions in the Electorate.''} \emph{Visual Communication
+Quarterly} 22 (3): 133--45.
+
+\leavevmode\vadjust pre{\hypertarget{ref-george2011interactive}{}}%
+George-Palilonis, Jennifer, and Mary Spillman. 2011. {``Interactive
+Graphics Development: A Framework for Studying Innovative Visual Story
+Forms.''} \emph{Visual Communication Quarterly} 18 (3): 167--77.
+
+\leavevmode\vadjust pre{\hypertarget{ref-george2013storytelling}{}}%
+---------. 2013. {``Storytelling with Interactive Graphics: An Analysis
+of Editors' Attitudes and Practices.''} \emph{Visual Communication
+Quarterly} 20 (1): 20--27.
+
 \leavevmode\vadjust pre{\hypertarget{ref-mosteller1981eye}{}}%
 Mosteller, Frederick, Andrew F Siegel, Edward Trapido, and Cleo Youtz.
 1981. {``Eye Fitting Straight Lines.''} \emph{The American Statistician}
 35 (3): 150--52.
+
+\leavevmode\vadjust pre{\hypertarget{ref-nagle2017slope}{}}%
+Nagle, Courtney, Stephanie Casey, and Deborah Moore-Russo. 2017.
+{``Slope and Line of Best Fit: A Transfer of Knowledge Case Study.''}
+\emph{School Science and Mathematics} 117 (1-2): 13--26.
 
 \leavevmode\vadjust pre{\hypertarget{ref-pearce_2019}{}}%
 Pearce, Adam. 2019. {``You-Draw-It.''} \emph{Observable}.
