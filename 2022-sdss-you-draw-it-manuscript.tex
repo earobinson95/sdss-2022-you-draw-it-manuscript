@@ -174,8 +174,8 @@
 
 \title{`You Draw It': Implementation of visually fitted trends with
 \texttt{r2d3}}
-\author{}
-\date{}
+% \author{}
+% \date{}
 
 \begin{document}
 \maketitle
@@ -196,7 +196,7 @@ for testing statistical graphics. We present an empirical evaluation of
 this testing method for linear regression, and briefly discuss an
 extension of this method to non-linear applications.
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, enhanced, interior hidden, sharp corners, borderline west={3pt}{0pt}{shadecolor}, frame hidden, boxrule=0pt]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, sharp corners, borderline west={3pt}{0pt}{shadecolor}, breakable, enhanced, frame hidden, interior hidden]}{\end{tcolorbox}}\fi
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -251,8 +251,8 @@ Energy Information Administration 2022).}
 \end{figure}
 
 Initial studies in the 20th century explored the use of fitting lines by
-eye through a set of points (Finney 1951; Mosteller et al. 1981; Unwin
-and Wills 1988). Common methods of fitting trends by eye involved
+eye through a set of points (Finney 1951; Mosteller et al. 1981; A. R.
+Unwin and Wills 1988). Common methods of fitting trends by eye involved
 maneuvering a string, black thread, or ruler until the fit was suitable,
 then drawing the line through the set of points. Results from these
 early studies provided groundwork for visually judging slopes and
@@ -737,11 +737,10 @@ lines.}
 \section{Discussion}\label{discussion}}
 
 The `You Draw It' graphical task presented in this work is an example of
-an interactive graphic. While any communication between user and device
-can be considered an interaction, interactive graphics should be defined
-as a user-driven direct manipulation of plots and plotting elements with
-an immediate reaction (Unwin 1999, Becker et al.~1987, Eick \& Wills
-1995). Here we discuss the use of `You Draw It' as a tool for
+an interactive graphic; an interactive graphic is defined as a
+user-driven direct manipulation of the plot followed by an immediate
+reaction (A. Unwin 1999; Eick and Wills 1995; Becker, Cleveland, and
+Wilks 1987). Here we discuss the use of `You Draw It' as a tool for
 interactive reading, interactive testing, and interactive teaching as a
 way to increase user experience and user engagement with data. The New
 York Times first introduced the `You Draw It' feature as a tool for
@@ -750,23 +749,23 @@ media have been used to inform readers in efforts to reduce
 misconceptions and aid in storytelling (Geidner et al. 2015;
 George-Palilonis and Spillman 2011, 2013). In our work, we demonstrated
 the use of the `You Draw It' method as a tool for interactive testing of
-graphics. We collect data of the user drawn lines and compare to
+graphics. We collected and compared data from user drawn lines to
 statistical results in order to understand perceptual biases. While this
 work has many possible directions for future work, there is a strong
 application to extend the `You Draw It' tool for interactive teaching.
 The line of best fit is introduced in secondary schools as a student's
-first encounter with the concept of statistical association (Casey and
-Nagle 2016). Casey (2015) and Casey (2016) conducted task based
-interviews to examine student's conceptions of the line of best fit
-prior to introducing the topic. The implications of using interactive
-teaching tools for the line of best fit can help students make
-connections between the shift in slope and the location of the best fit
-line (Nagle, Casey, and Moore-Russo 2017). Casey and Wasserman (2015)
-conducted similar task based interviews wish pre-service mathematics
-teachers in order to understand the implications regarding teacher
-preparation for the teaching of this topic. This demonstrates the use of
-the `You Draw It' interactive tool for training purposes both within a
-classroom setting and for those in the workforce.
+first encounter with the concept of statistical association between
+multiple variables (Casey and Nagle 2016). Casey (2015) and Casey (2016)
+conducted task based interviews to examine student's conceptions of the
+line of best fit prior to introducing the topic. The implications of
+using interactive teaching tools for the line of best fit can help
+students make connections between the shift in slope and the location of
+the best fit line (Nagle, Casey, and Moore-Russo 2017). Casey and
+Wasserman (2015) conducted similar task based interviews wish
+pre-service mathematics teachers in order to understand the effects
+regarding teacher preparation for the teaching of this topic. This
+demonstrates the use of the `You Draw It' interactive tool for training
+purposes both within a classroom setting and for those in the workforce.
 
 \hypertarget{conclusion}{%
 \section{Conclusion}\label{conclusion}}
@@ -852,6 +851,11 @@ Bates, Douglas, Martin Mächler, Ben Bolker, and Steve Walker. 2015.
 Statistical Software} 67 (1): 1--48.
 \url{https://doi.org/10.18637/jss.v067.i01}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-becker1987dynamic}{}}%
+Becker, Richard A, William S Cleveland, and Allan R Wilks. 1987.
+{``Dynamic Graphics for Data Analysis.''} \emph{Statistical Science} 2
+(4): 355--83.
+
 \leavevmode\vadjust pre{\hypertarget{ref-bostock2011d3}{}}%
 Bostock, Michael, Vadim Ogievetsky, and Jeffrey Heer. 2011. {``D\(^3\)
 Data-Driven Documents.''} \emph{IEEE Transactions on Visualization and
@@ -883,6 +887,11 @@ Scatterplots.''} \emph{Cognitive Psychology} 128: 101406.
 
 \leavevmode\vadjust pre{\hypertarget{ref-deming1943statistical}{}}%
 Deming, William Edwards. 1943. {``Statistical Adjustment of Data.''}
+
+\leavevmode\vadjust pre{\hypertarget{ref-eick1995high}{}}%
+Eick, Stephen G, and Graham J Wills. 1995. {``High Interaction
+Graphics.''} \emph{European Journal of Operational Research} 81 (3):
+445--59.
 
 \leavevmode\vadjust pre{\hypertarget{ref-finney1951subjective}{}}%
 Finney, DJ. 1951. {``Subjective Judgment in Statistical Analysis: An
@@ -933,6 +942,11 @@ Computing}. Vienna, Austria: R Foundation for Statistical Computing.
 Strayer, Nick, Javier Luraschi, and JJ Allaire. 2020. \emph{R2d3:
 Interface to 'D3' Visualizations}.
 \url{https://CRAN.R-project.org/package=r2d3}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-unwin1999requirements}{}}%
+Unwin, Antony. 1999. {``Requirements for Interactive Graphics Software
+for Exploratory Data Analysis.''} \emph{Computational Statistics} 14
+(1): 7--22.
 
 \leavevmode\vadjust pre{\hypertarget{ref-unwin1988eyeballing}{}}%
 Unwin, Antony R, and Graham Wills. 1988. {``Eyeballing Time Series.''}

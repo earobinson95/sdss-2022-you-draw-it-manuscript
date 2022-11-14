@@ -624,18 +624,17 @@ spaghetti_plot
 
 # Discussion
 
-The 'You Draw It' graphical task presented in this work is an example of an interactive graphic. 
-While any communication between user and device can be considered an interaction, interactive graphics should be defined as a user-driven direct manipulation of plots and plotting elements with an immediate reaction (Unwin 1999, Becker et al. 1987, Eick & Wills 1995).
+The 'You Draw It' graphical task presented in this work is an example of an interactive graphic; an interactive graphic is defined as a user-driven direct manipulation of the plot followed by an immediate reaction [@unwin1999requirements; @eick1995high; @becker1987dynamic].
 Here we discuss the use of 'You Draw It' as a tool for interactive reading, interactive testing, and interactive teaching as a way to increase user experience and user engagement with data.
 The New York Times first introduced the 'You Draw It' feature as a tool for interactive reading.
 The inclusion of interactive graphics in news and media have been used to inform readers in efforts to reduce misconceptions and aid in storytelling [@geidner2015role; @george2011interactive; @george2013storytelling].
 In our work, we demonstrated the use of the 'You Draw It' method as a tool for interactive testing of graphics.
-We collect data of the user drawn lines and compare to statistical results in order to understand perceptual biases.
+We collected and compared data from user drawn lines to statistical results in order to understand perceptual biases.
 While this work has many possible directions for future work, there is a strong application to extend the 'You Draw It' tool for interactive teaching.
-The line of best fit is introduced in secondary schools as a student's first encounter with the concept of statistical association [@casey2016students].
+The line of best fit is introduced in secondary schools as a student's first encounter with the concept of statistical association between multiple variables [@casey2016students].
 @casey2015examining and @casey2016finding conducted task based interviews to examine student's conceptions of the line of best fit prior to introducing the topic.
 The implications of using interactive teaching tools for the line of best fit can help students make connections between the shift in slope and the location of the best fit line [@nagle2017slope].
-@casey2015teachers conducted similar task based interviews wish pre-service mathematics teachers in order to understand the implications regarding teacher preparation for the teaching of this topic. 
+@casey2015teachers conducted similar task based interviews wish pre-service mathematics teachers in order to understand the effects regarding teacher preparation for the teaching of this topic. 
 This demonstrates the use of the 'You Draw It' interactive tool for training purposes both within a classroom setting and for those in the workforce.
 
 # Conclusion
