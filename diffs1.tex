@@ -1,4 +1,7 @@
 % Options for packages loaded elsewhere
+%DIF LATEXDIFF DIFFERENCE FILE
+%DIF DEL C:\Users\erobin17\Documents\publications\2022-sdss-you-draw-it-manuscript\original-2022-sdss-you-draw-it-manuscript.tex   Fri Oct 28 09:54:19 2022
+%DIF ADD C:\Users\erobin17\Documents\publications\2022-sdss-you-draw-it-manuscript\2022-sdss-you-draw-it-manuscript.tex            Mon Nov 14 07:20:37 2022
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -174,8 +177,91 @@
 
 \title{`You Draw It': Implementation of visually fitted trends with
 \texttt{r2d3}}
-\author{}
-\date{}
+% \author{}
+%DIF < \date{}
+%DIF -------
+% \date{} %DIF > 
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{color}\definecolor{RED}{rgb}{1,0,0}\definecolor{BLUE}{rgb}{0,0,1} %DIF PREAMBLE
+\providecommand{\DIFaddtex}[1]{{\protect\color{blue}\uwave{#1}}} %DIF PREAMBLE
+\providecommand{\DIFdeltex}[1]{{\protect\color{red}\sout{#1}}}                      %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+\providecommand{\DIFmodbegin}{} %DIF PREAMBLE
+\providecommand{\DIFmodend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
+\providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
+\providecommand{\DIFaddbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFaddendFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelendFL}{} %DIF PREAMBLE
+%DIF HYPERREF PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFadd}[1]{\texorpdfstring{\DIFaddtex{#1}}{#1}} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{\texorpdfstring{\DIFdeltex{#1}}{}} %DIF PREAMBLE
+\newcommand{\DIFscaledelfig}{0.5}
+%DIF HIGHLIGHTGRAPHICS PREAMBLE %DIF PREAMBLE
+\RequirePackage{settobox} %DIF PREAMBLE
+\RequirePackage{letltxmacro} %DIF PREAMBLE
+\newsavebox{\DIFdelgraphicsbox} %DIF PREAMBLE
+\newlength{\DIFdelgraphicswidth} %DIF PREAMBLE
+\newlength{\DIFdelgraphicsheight} %DIF PREAMBLE
+% store original definition of \includegraphics %DIF PREAMBLE
+\LetLtxMacro{\DIFOincludegraphics}{\includegraphics} %DIF PREAMBLE
+\newcommand{\DIFaddincludegraphics}[2][]{{\color{blue}\fbox{\DIFOincludegraphics[#1]{#2}}}} %DIF PREAMBLE
+\newcommand{\DIFdelincludegraphics}[2][]{% %DIF PREAMBLE
+\sbox{\DIFdelgraphicsbox}{\DIFOincludegraphics[#1]{#2}}% %DIF PREAMBLE
+\settoboxwidth{\DIFdelgraphicswidth}{\DIFdelgraphicsbox} %DIF PREAMBLE
+\settoboxtotalheight{\DIFdelgraphicsheight}{\DIFdelgraphicsbox} %DIF PREAMBLE
+\scalebox{\DIFscaledelfig}{% %DIF PREAMBLE
+\parbox[b]{\DIFdelgraphicswidth}{\usebox{\DIFdelgraphicsbox}\\[-\baselineskip] \rule{\DIFdelgraphicswidth}{0em}}\llap{\resizebox{\DIFdelgraphicswidth}{\DIFdelgraphicsheight}{% %DIF PREAMBLE
+\setlength{\unitlength}{\DIFdelgraphicswidth}% %DIF PREAMBLE
+\begin{picture}(1,1)% %DIF PREAMBLE
+\thicklines\linethickness{2pt} %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,0){\framebox(1,1){}}}% %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,0){\line( 1,1){1}}}% %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,1){\line(1,-1){1}}}% %DIF PREAMBLE
+\end{picture}% %DIF PREAMBLE
+}\hspace*{3pt}}} %DIF PREAMBLE
+} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddbegin}{\DIFaddbegin} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddend}{\DIFaddend} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelbegin}{\DIFdelbegin} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelend}{\DIFdelend} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddbegin}{\DIFOaddbegin \let\includegraphics\DIFaddincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddend}{\DIFOaddend \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelbegin}{\DIFOdelbegin \let\includegraphics\DIFdelincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelend}{\DIFOaddend \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddbeginFL}{\DIFaddbeginFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddendFL}{\DIFaddendFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelbeginFL}{\DIFdelbeginFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelendFL}{\DIFdelendFL} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddbeginFL}{\DIFOaddbeginFL \let\includegraphics\DIFaddincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddendFL}{\DIFOaddendFL \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelbeginFL}{\DIFOdelbeginFL \let\includegraphics\DIFdelincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelendFL}{\DIFOaddendFL \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+%DIF COLORLISTINGS PREAMBLE %DIF PREAMBLE
+\RequirePackage{listings} %DIF PREAMBLE
+\RequirePackage{color} %DIF PREAMBLE
+\lstdefinelanguage{DIFcode}{ %DIF PREAMBLE
+%DIF DIFCODE_UNDERLINE %DIF PREAMBLE
+  moredelim=[il][\color{red}\sout]{\%DIF\ <\ }, %DIF PREAMBLE
+  moredelim=[il][\color{blue}\uwave]{\%DIF\ >\ } %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstdefinestyle{DIFverbatimstyle}{ %DIF PREAMBLE
+	language=DIFcode, %DIF PREAMBLE
+	basicstyle=\ttfamily, %DIF PREAMBLE
+	columns=fullflexible, %DIF PREAMBLE
+	keepspaces=true %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim}{\lstset{style=DIFverbatimstyle}}{} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim*}{\lstset{style=DIFverbatimstyle,showspaces=true}}{} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
 
 \begin{document}
 \maketitle
@@ -196,7 +282,8 @@ for testing statistical graphics. We present an empirical evaluation of
 this testing method for linear regression, and briefly discuss an
 extension of this method to non-linear applications.
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, boxrule=0pt, frame hidden, borderline west={3pt}{0pt}{shadecolor}, sharp corners, enhanced, breakable]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\DIFdelbegin %DIFDELCMD < \renewenvironment{Shaded}{\begin{tcolorbox}[borderline west={3pt}{0pt}{shadecolor}, frame hidden, enhanced, breakable, sharp corners, interior hidden, boxrule=0pt]}{\end{tcolorbox}}%%%
+\DIFdelend \DIFaddbegin \renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, sharp corners, borderline west={3pt}{0pt}{shadecolor}, breakable, enhanced, frame hidden, interior hidden]}{\end{tcolorbox}}\DIFaddend \fi
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -239,20 +326,20 @@ energy sources.
 
 }
 
-\caption{\label{fig-gas-prices}Demonstration of a viewer's engagement
-with a scatterplot showing the weekly average gas prices in the United
-States, from 2019-June 2022. The veiwer might perform several cognitive
+\caption{\label{fig-gas-prices}\DIFdelbeginFL \DIFdelFL{Weekly }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Demonstration of a viewer's engagement
+with a scatterplot showing the weekly }\DIFaddendFL average gas prices in the United
+States, \DIFaddbeginFL \DIFaddFL{from }\DIFaddendFL 2019-June 2022. \DIFdelbeginFL \DIFdelFL{Additional mental operations a viewer }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{The veiwer }\DIFaddendFL might perform \DIFdelbeginFL \DIFdelFL{while looking at }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{several cognitive
 operations such as assessing points to determine outliers, fitting a
 rough mental smooth/trend line (overlaying solid gray line), and using
-additional contextual information from long term memory to explain the
-variation (shaded rectangular gray regions annotated in black text) (US
+additional contextual information from long term memory to explain }\DIFaddendFL the
+\DIFdelbeginFL \DIFdelFL{plot are }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{variation (shaded rectangular gray regions }\DIFaddendFL annotated in \DIFdelbeginFL \DIFdelFL{grey }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{black text) }\DIFaddendFL (US
 Energy Information Administration 2022).}
 
 \end{figure}
 
 Initial studies in the 20th century explored the use of fitting lines by
-eye through a set of points (Finney 1951; Mosteller et al. 1981; Unwin
-and Wills 1988). Common methods of fitting trends by eye involved
+eye through a set of points (Finney 1951; Mosteller et al. 1981; \DIFaddbegin \DIFadd{A. R.
+}\DIFaddend Unwin and Wills 1988). Common methods of fitting trends by eye involved
 maneuvering a string, black thread, or ruler until the fit was suitable,
 then drawing the line through the set of points. Results from these
 early studies provided groundwork for visually judging slopes and
@@ -408,15 +495,28 @@ human behavior.
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.7\textwidth,height=\textheight]{./images/fig-you-draw-it-task-plot-1.pdf}
+{\centering \DIFdelbeginFL %DIFDELCMD < \includegraphics{images/ydi-stimuli.png}
+%DIFDELCMD < %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.7\textwidth,height=\textheight]{./images/fig-you-draw-it-task-plot-1.pdf}
+\DIFaddendFL 
 
 }
 
 \caption{\label{fig-you-draw-it-task-plot}You Draw It task plot as shown
-to user. \textbf{top:} Initial state, with instructions,
-\textit{Use your mouse to fill in the trend in the yellow box region.}
-\textbf{middle:} User view during task completion. \textbf{bottom:}
-Finished state.}
+to user. \DIFdelbeginFL %DIFDELCMD < \\
+%DIFDELCMD < %%%
+\textbf{\DIFdelFL{left:}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{top:}} \DIFaddendFL Initial state, with instructions\DIFdelbeginFL \emph{\DIFdelFL{Use your mouse to
+fill in the trend in the yellow box region.}}%DIFAUXCMD
+%DIFDELCMD < \\
+%DIFDELCMD < %%%
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{,
+}\textit{\DIFaddFL{Use your mouse to fill in the trend in the yellow box region.}}
+\DIFaddendFL \textbf{middle:} User view during task completion. \DIFdelbeginFL %DIFDELCMD < \\
+%DIFDELCMD < %%%
+\textbf{\DIFdelFL{right:}} %DIFAUXCMD
+\DIFdelendFL \DIFaddbeginFL \textbf{\DIFaddFL{bottom:}}
+\DIFaddendFL Finished state\DIFaddbeginFL \DIFaddFL{.}\DIFaddendFL }
 
 \end{figure}
 
@@ -452,7 +552,10 @@ shown in Figure~\ref{fig-you-draw-it-code-sketch}.
 
 \begin{figure}
 
-{\centering \includegraphics{images/code-sketch.png}
+{\centering \DIFdelbeginFL %DIFDELCMD < \includegraphics{images/code-sketch-2.png}
+%DIFDELCMD < %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics{images/code-sketch.png}
+\DIFaddendFL 
 
 }
 
@@ -533,8 +636,8 @@ the selected parameters followed the practice plots in a random order
 for each individual; these plots were interspersed with plots from a
 different experiment.
 
-Participants were recruited via Prolific, a crowd sourcing platform for
-researchers to recruit participants for their online studies, in March
+Participants were recruited via Prolific\DIFaddbegin \DIFadd{, a crowd sourcing platform for
+researchers to recruit participants for their online studies, }\DIFaddend in March
 2022; while this study does utilize a convenience sample, as this is
 primarily a perceptual task, previous results have found few differences
 between expert and non-expert participants in this context (VanderPlas
@@ -733,16 +836,16 @@ lines.}
 
 \end{figure}
 
-\hypertarget{discussion}{%
+\DIFaddbegin \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
-The `You Draw It' graphical task presented in this work is an example of
-an interactive graphic. Here we discuss the use of `You Draw It' as a
-tool for interactive reading, interactive testing, and interactive
-teaching as a way to increase user experience and user engagement with
-data. The New York Times first introduced the `You Draw It' feature as a
-tool for interactive reading. The inclusion of interactive graphics in
-news and media have been used to inform readers in efforts to reduce
+\DIFadd{The `You Draw It' graphical task presented in this work is an example of
+an interactive graphic. Here we discuss the use of `You Draw It' as a tool for
+interactive reading, interactive testing, and interactive teaching as a
+way to increase user experience and user engagement with data. The New
+York Times first introduced the `You Draw It' feature as a tool for
+interactive reading. The inclusion of interactive graphics in news and
+media have been used to inform readers in efforts to reduce
 misconceptions and aid in storytelling (Geidner et al. 2015;
 George-Palilonis and Spillman 2011, 2013). In our work, we demonstrated
 the use of the `You Draw It' method as a tool for interactive testing of
@@ -763,8 +866,9 @@ pre-service mathematics teachers in order to understand the effects
 regarding teacher preparation for the teaching of this topic. This
 demonstrates the use of the `You Draw It' interactive tool for training
 purposes both within a classroom setting and for those in the workforce.
+}
 
-\hypertarget{conclusion}{%
+\DIFaddend \hypertarget{conclusion}{%
 \section{Conclusion}\label{conclusion}}
 
 The data presented in this paper are part of a much broader experiment
@@ -848,31 +952,41 @@ Bates, Douglas, Martin Mächler, Ben Bolker, and Steve Walker. 2015.
 Statistical Software} 67 (1): 1--48.
 \url{https://doi.org/10.18637/jss.v067.i01}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-bostock2011d3}{}}%
+\leavevmode\vadjust pre{\DIFaddbegin \hypertarget{ref-becker1987dynamic}{}}%DIF > 
+\DIFadd{Becker, Richard A, William S Cleveland, and Allan R Wilks. 1987.
+}{\DIFadd{``Dynamic Graphics for Data Analysis.''}} \emph{\DIFadd{Statistical Science}} \DIFadd{2
+(4): 355--83.
+}
+
+\leavevmode\vadjust \DIFadd{pre}{\DIFaddend \hypertarget{ref-bostock2011d3}{}}%
 Bostock, Michael, Vadim Ogievetsky, and Jeffrey Heer. 2011. {``D\(^3\)
 Data-Driven Documents.''} \emph{IEEE Transactions on Visualization and
 Computer Graphics} 17 (12): 2301--9.
 
-\leavevmode\vadjust pre{\hypertarget{ref-casey2015examining}{}}%
-Casey, Stephanie A. 2015. {``Examining Student Conceptions of
-Covariation: A Focus on the Line of Best Fit.''} \emph{Journal of
-Statistics Education} 23 (1).
+\leavevmode\vadjust pre{\DIFaddbegin \hypertarget{ref-casey2015examining}{}}%DIF > 
+\DIFadd{Casey, Stephanie A. 2015. }{\DIFadd{``Examining Student Conceptions of
+Covariation: A Focus on the Line of Best Fit.''}} \emph{\DIFadd{Journal of
+Statistics Education}} \DIFadd{23 (1).
+}
 
-\leavevmode\vadjust pre{\hypertarget{ref-casey2016finding}{}}%
----------. 2016. {``Finding What Fits.''} \emph{Mathematics Teaching in
-the Middle School} 21 (8): 484--91.
+\leavevmode\vadjust \DIFadd{pre}{\hypertarget{ref-casey2016finding}{}}%DIF > 
+\DIFadd{---------. 2016. }{\DIFadd{``Finding What Fits.''}} \emph{\DIFadd{Mathematics Teaching in
+the Middle School}} \DIFadd{21 (8): 484--91.
+}
 
-\leavevmode\vadjust pre{\hypertarget{ref-casey2016students}{}}%
-Casey, Stephanie A, and Courtney Nagle. 2016. {``Students' Use of Slope
-Conceptualizations When Reasoning about the Line of Best Fit.''}
-\emph{Educational Studies in Mathematics} 92 (2): 163--77.
+\leavevmode\vadjust \DIFadd{pre}{\hypertarget{ref-casey2016students}{}}%DIF > 
+\DIFadd{Casey, Stephanie A, and Courtney Nagle. 2016. }{\DIFadd{``Students' Use of Slope
+Conceptualizations When Reasoning about the Line of Best Fit.''}}
+\emph{\DIFadd{Educational Studies in Mathematics}} \DIFadd{92 (2): 163--77.
+}
 
-\leavevmode\vadjust pre{\hypertarget{ref-casey2015teachers}{}}%
-Casey, Stephanie A, and Nicholas H Wasserman. 2015.
-{``TEACHERS'KNOWLEDGE ABOUT INFORMAL LINE OF BEST FIT.''}
-\emph{Statistics Education Research Journal} 14 (1): 8--35.
+\leavevmode\vadjust \DIFadd{pre}{\hypertarget{ref-casey2015teachers}{}}%DIF > 
+\DIFadd{Casey, Stephanie A, and Nicholas H Wasserman. 2015.
+}{\DIFadd{``TEACHERS'KNOWLEDGE ABOUT INFORMAL LINE OF BEST FIT.''}}
+\emph{\DIFadd{Statistics Education Research Journal}} \DIFadd{14 (1): 8--35.
+}
 
-\leavevmode\vadjust pre{\hypertarget{ref-ciccione2021can}{}}%
+\leavevmode\vadjust \DIFadd{pre}{\DIFaddend \hypertarget{ref-ciccione2021can}{}}%
 Ciccione, Lorenzo, and Stanislas Dehaene. 2021. {``Can Humans Perform
 Mental Regression on a Graph? Accuracy and Bias in the Perception of
 Scatterplots.''} \emph{Cognitive Psychology} 128: 101406.
@@ -880,7 +994,13 @@ Scatterplots.''} \emph{Cognitive Psychology} 128: 101406.
 \leavevmode\vadjust pre{\hypertarget{ref-deming1943statistical}{}}%
 Deming, William Edwards. 1943. {``Statistical Adjustment of Data.''}
 
-\leavevmode\vadjust pre{\hypertarget{ref-finney1951subjective}{}}%
+\leavevmode\vadjust pre{\DIFaddbegin \hypertarget{ref-eick1995high}{}}%DIF > 
+\DIFadd{Eick, Stephen G, and Graham J Wills. 1995. }{\DIFadd{``High Interaction
+Graphics.''}} \emph{\DIFadd{European Journal of Operational Research}} \DIFadd{81 (3):
+445--59.
+}
+
+\leavevmode\vadjust \DIFadd{pre}{\DIFaddend \hypertarget{ref-finney1951subjective}{}}%
 Finney, DJ. 1951. {``Subjective Judgment in Statistical Analysis: An
 Experimental Study.''} \emph{Journal of the Royal Statistical Society:
 Series B (Methodological)} 13 (2): 284--97.
@@ -890,33 +1010,37 @@ Furic, Benoit. 2017. {``You-Draw-It-Graph: The User Can Draw His Own
 Graph Line and Compare with the Reality.''} \emph{GitHub}.
 \url{https://github.com/BenoitFuric/you-draw-it-graph}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-geidner2015role}{}}%
-Geidner, Nick, Ivanka Pjesivac, Iveta Imre, Ioana Coman, and Dzmitry
-Yuran. 2015. {``The Role of Interactive Graphics in Reducing
-Misperceptions in the Electorate.''} \emph{Visual Communication
-Quarterly} 22 (3): 133--45.
+\leavevmode\vadjust pre{\DIFaddbegin \hypertarget{ref-geidner2015role}{}}%DIF > 
+\DIFadd{Geidner, Nick, Ivanka Pjesivac, Iveta Imre, Ioana Coman, and Dzmitry
+Yuran. 2015. }{\DIFadd{``The Role of Interactive Graphics in Reducing
+Misperceptions in the Electorate.''}} \emph{\DIFadd{Visual Communication
+Quarterly}} \DIFadd{22 (3): 133--45.
+}
 
-\leavevmode\vadjust pre{\hypertarget{ref-george2011interactive}{}}%
-George-Palilonis, Jennifer, and Mary Spillman. 2011. {``Interactive
+\leavevmode\vadjust \DIFadd{pre}{\hypertarget{ref-george2011interactive}{}}%DIF > 
+\DIFadd{George-Palilonis, Jennifer, and Mary Spillman. 2011. }{\DIFadd{``Interactive
 Graphics Development: A Framework for Studying Innovative Visual Story
-Forms.''} \emph{Visual Communication Quarterly} 18 (3): 167--77.
+Forms.''}} \emph{\DIFadd{Visual Communication Quarterly}} \DIFadd{18 (3): 167--77.
+}
 
-\leavevmode\vadjust pre{\hypertarget{ref-george2013storytelling}{}}%
----------. 2013. {``Storytelling with Interactive Graphics: An Analysis
-of Editors' Attitudes and Practices.''} \emph{Visual Communication
-Quarterly} 20 (1): 20--27.
+\leavevmode\vadjust \DIFadd{pre}{\hypertarget{ref-george2013storytelling}{}}%DIF > 
+\DIFadd{---------. 2013. }{\DIFadd{``Storytelling with Interactive Graphics: An Analysis
+of Editors' Attitudes and Practices.''}} \emph{\DIFadd{Visual Communication
+Quarterly}} \DIFadd{20 (1): 20--27.
+}
 
-\leavevmode\vadjust pre{\hypertarget{ref-mosteller1981eye}{}}%
+\leavevmode\vadjust \DIFadd{pre}{\DIFaddend \hypertarget{ref-mosteller1981eye}{}}%
 Mosteller, Frederick, Andrew F Siegel, Edward Trapido, and Cleo Youtz.
 1981. {``Eye Fitting Straight Lines.''} \emph{The American Statistician}
 35 (3): 150--52.
 
-\leavevmode\vadjust pre{\hypertarget{ref-nagle2017slope}{}}%
-Nagle, Courtney, Stephanie Casey, and Deborah Moore-Russo. 2017.
-{``Slope and Line of Best Fit: A Transfer of Knowledge Case Study.''}
-\emph{School Science and Mathematics} 117 (1-2): 13--26.
+\leavevmode\vadjust pre{\DIFaddbegin \hypertarget{ref-nagle2017slope}{}}%DIF > 
+\DIFadd{Nagle, Courtney, Stephanie Casey, and Deborah Moore-Russo. 2017.
+}{\DIFadd{``Slope and Line of Best Fit: A Transfer of Knowledge Case Study.''}}
+\emph{\DIFadd{School Science and Mathematics}} \DIFadd{117 (1-2): 13--26.
+}
 
-\leavevmode\vadjust pre{\hypertarget{ref-pearce_2019}{}}%
+\leavevmode\vadjust \DIFadd{pre}{\DIFaddend \hypertarget{ref-pearce_2019}{}}%
 Pearce, Adam. 2019. {``You-Draw-It.''} \emph{Observable}.
 \url{https://bl.ocks.org/1wheel/07d9040c3422dac16bd5be741433ff1e}.
 
@@ -928,7 +1052,13 @@ Computing}. Vienna, Austria: R Foundation for Statistical Computing.
 \leavevmode\vadjust pre{\hypertarget{ref-r2d3pkg}{}}%
 Strayer, Nick, Javier Luraschi, and JJ Allaire. 2020. \emph{R2d3:
 Interface to 'D3' Visualizations}.
-\url{https://CRAN.R-project.org/package=r2d3}.
+\url{https://CRAN.R-project.org/package=r2d3}\DIFaddbegin \DIFadd{.
+}
+
+\leavevmode\vadjust \DIFadd{pre}{\hypertarget{ref-unwin1999requirements}{}}%DIF > 
+\DIFadd{Unwin, Antony. 1999. }{\DIFadd{``Requirements for Interactive Graphics Software
+for Exploratory Data Analysis.''}} \emph{\DIFadd{Computational Statistics}} \DIFadd{14
+(1): 7--22}\DIFaddend .
 
 \leavevmode\vadjust pre{\hypertarget{ref-unwin1988eyeballing}{}}%
 Unwin, Antony R, and Graham Wills. 1988. {``Eyeballing Time Series.''}

@@ -12,7 +12,7 @@ format:
 
 ## Reviewer(s)' Comments to Author
 
-All responses to reviewers' comments are written in \response{blue}.
+All responses to reviewers' comments are written in \response{blue}. A `diffs1.pdf` file has also been included to show changes.
 
 <!-- \todo{Need to address yet.} \dubcheck{Double check / review.} -->
 
@@ -53,5 +53,10 @@ I agree with the AE’s decision of “Requires Major Revision”.
   + \response{Figure 1, Figure 5, and Figure 6 were generated within R and saved directly to pdf files from within the R environment. We expect these are all vector compatible; please let us know if this isn't sufficient or if we should use a different graphics device.}
   + \response{Figure 2 and Figure 3 were screenshots taken from websites. We zoomed in on a high quality screen and took a screenshot; saved as high resolution png files.}
   + \response{Figure 4 was sketched using an online tool; saving this as an svg changes the appearance of the font type and we would like to keep the sketched font. We saved this at the highest resoultion the tool allowed as a png file.}
+  
+<!-- latexdiff C:/Users/erobin17/Documents/publications/2022-sdss-you-draw-it-manuscript/original-2022-sdss-you-draw-it-manuscript.tex C:/Users/erobin17/Documents/publications/2022-sdss-you-draw-it-manuscript/2022-sdss-you-draw-it-manuscript.tex > C:/Users/erobin17/Documents/publications/2022-sdss-you-draw-it-manuscript/diffs1.tex -->
+
+
+
   
   
